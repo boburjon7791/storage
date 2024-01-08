@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/image")
-@PreAuthorize("hasRole('EMPLOYEE')")
+@PreAuthorize("isAuthenticated()")
 public class ImageController {
     private final ImageService imageService;
     private final ProductService productService;
@@ -38,11 +38,13 @@ public class ImageController {
         model.addAttribute("img", image);
         return "product/save2";
     }
+    @PreAuthorize("hasRole('MANAGER')")
     @GetMapping("/update/{pId}")
     public String updateImage(@PathVariable long pId, Model model){
         model.addAttribute("p_id",pId);
         return "product/update";
     }
+    @PreAuthorize("hasRole('MANAGER')")
     @PostMapping("/update2")
     public String updateCommit(
             @RequestParam MultipartFile file,

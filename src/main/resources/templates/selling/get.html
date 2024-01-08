@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Selling Get</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
+</head>
+<body>
+<script src="../js/first.js"></script>
+<script src="/js/first.js"></script>
+<script src="../js/second.js"></script>
+<script src="/js/second.js"></script>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/auth/profile">Akkaunt</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Bosh sahifa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/selling/save1">Savdo yaratish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/selling/get-list">Savdolarni ko'rish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/product/save">Mahsulot yaratish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/product/list">Mahsulotlarni ko'rish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/daily/report">Kunlik hisobotlarni ko'rish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/monthly/report">Oylik hisobotlarni ko'rish</a>
+                </li>
+            </ul>
+            <form class="d-flex" action="/product/list-by-name" role="search">
+                <input class="form-control me-2" type="search" name="name" required placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Qidirish</button>
+            </form>
+        </div>
+    </div>
+</nav>
+<br>
+<div class="card">
+    <div class="card-body">
+        <div class="card position-relative">
+        <div class="card-body">
+        <form action="/selling/list-by-date" method="get" enctype="application/x-www-form-urlencoded">
+            <select class="form-control w-auto" name="page" required>
+                <option th:each="p : ${pages}" th:default="${sells.number}" th:text="${p}" th:value="${p}"></option>
+            </select>
+            <label>Kun bo'yicha qidirish</label>
+            <input type="date" name="date" th:value="${now}" required>
+            <h3 th:text="'Joriy sahifa ' + ${sells.number}"></h3>
+            <input class="btn btn-success" type="submit" value="Olib kelish" required>
+        </form>
+        </div>
+        </div>
+        <div>
+            <h1 th:text="${date}+' kungi savdolar'"></h1>
+        </div>
+        <table class="table table-light">
+            <thead>
+             <tr>
+                 <th>Mahsulot nomi</th>
+                 <th>Mahsulot rasmi</th>
+                 <th>Miqdori</th>
+                 <th>Umumiy savdo</th>
+                 <th>Vaqti</th>
+             </tr>
+            </thead>
+            <tbody>
+            <tr th:each="s:${sells}">
+                <td><a th:href="@{'/product/get/'+${s.product.id}}" target="_blank" th:text="${s.product.name}"></a></td>
+                <td><a th:href="@{'/product/get/'+${s.product.id}}" target="_blank"><img style="height: 100px" th:src="@{'/image/get/'+${s.product.image}}" th:alt="${s.product.name}"></a></td>
+                <td th:text="${s.count}"></td>
+                <td th:text="${s.soldPrice}"></td>
+                <td th:text="${s.dateTime.hour}+' : '+${s.dateTime.minute}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

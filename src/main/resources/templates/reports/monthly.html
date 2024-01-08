@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Monthly</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
+</head>
+<body>
+<script src="/js/first.js"></script>
+<script src="../js/first.js"></script>
+<script src="/js/second.js"></script>
+<script src="../js/second.js"></script>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/auth/profile">Akkaunt</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Bosh sahifa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/selling/save1">Savdo yaratish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/selling/get-list">Savdolarni ko'rish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/product/save">Mahsulot yaratish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/product/list">Mahsulotlarni ko'rish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/daily/report">Kunlik hisobotlarni ko'rish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/monthly/report">Oylik hisobotlarni ko'rish</a>
+                </li>
+            </ul>
+            <form class="d-flex" action="/product/list-by-name" role="search">
+                <input class="form-control me-2" type="search" name="name" required placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Qidirish</button>
+            </form>
+        </div>
+    </div>
+</nav>
+<br>
+<div class="card">
+    <div class="card-body">
+        <form action="/monthly/report/get" method="get" enctype="application/x-www-form-urlencoded">
+            <div class="d-flex">
+                <div class="mr-2">
+                    <label>Yilni tanlang</label>
+                    <select class="form-control w-auto" name="year" required>
+                        <option th:each="y:${years}" th:text="${y}" th:value="${y}"></option>
+                    </select>
+                </div>
+                <h1 style="color: black">|</h1>
+                <br>
+                <input type="submit" style="height: 40px" class="btn btn-success" value="Qidirish">
+            </div>
+        </form>
+        <style>
+            th,td{
+                text-align: center;
+            }
+        </style>
+        <table class="table table-light">
+            <thead>
+            <tr>
+                <th>Yil</th>
+                <th>Oy</th>
+                <th>Umumiy qiymati</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="r:${reports}">
+                <td th:text="${r.year}"></td>
+                <td><a target="_blank" th:text="${r.month.name()}" th:href="@{'/daily/report/get-month/'+${r.month.value}+'/'+${r.year}}"></a></td>
+                <td th:text="${r.total}"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <th th:text="${total}"></th>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

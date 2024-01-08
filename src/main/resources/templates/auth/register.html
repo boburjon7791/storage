@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
+</head>
+<body>
+<style>
+    .card,.form-control{
+        border-color: #198754; /* Rangni o'zgartiring */
+    }
+</style>
+<script src="/node_modules/bcryptjs/dist/bcrypt.min.js"></script>
+<script src="../node_modules/bcryptjs/dist/bcrypt.min.js"></script>
+<script>
+    function check() {
+        var con=confirm('Malumotlaringiz to`g`ri ekanligini tasdiqlaysizmi?')
+        if (!con) {
+            return false
+        }
+        return true;
+    }
+</script>
+<form action="/auth/save" method="POST" enctype="application/x-www-form-urlencoded" onsubmit="return check()">
+    <div class="position-absolute top-50 start-50 translate-middle">
+        <div class="card">
+            <div class="card-body">
+                <h1 style="color: #198754">Tizimga kirish</h1>
+                <label>
+                    <input type="hidden" id="_csrf" name="_csrf" th:value="${_csrf.token}" required>
+                    <input type="text" id="formGroupExampleInput1" name="firstName" class="form-control" placeholder="Ismingizni kiriting" required>
+                    <br>
+                    <input type="text" id="formGroupExampleInput2" name="lastName" class="form-control" placeholder="Familyangizni kiriting" required>
+                    <br>
+                    <input type="text" id="formGroupExampleInput3" name="username" class="form-control" placeholder="Loginingizni kiriting" required>
+                    <br>
+                    <input type="password" id="formGroupExampleInput4" name="password" class="form-control" placeholder="Parolingizni kiriting" required>
+                    <br>
+                    <input type="submit" class="btn btn-success" value="Kirish" required>
+                </label>
+            </div>
+        </div>
+    </div>
+</form>
+</body>
+</html>

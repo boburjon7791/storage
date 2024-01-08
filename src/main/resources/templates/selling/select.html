@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Selling Start</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
+</head>
+<body>
+<script src="../js/first.js"></script>
+<script src="/js/first.js"></script>
+<script src="../js/second.js"></script>
+<script src="/js/second.js"></script>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/auth/profile">Akkaunt</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active"  aria-current="page" href="/">Bosh sahifa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active"  href="/selling/save1">Savdo yaratish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active"  href="/selling/get-list">Savdolarni ko'rish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active"  href="/product/save">Mahsulot yaratish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active"  href="/product/list">Mahsulotlarni ko'rish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/daily/report">Kunlik hisobotlarni ko'rish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/monthly/report">Oylik hisobotlarni ko'rish</a>
+                </li>
+            </ul>
+            <form class="d-flex" action="/selling/save1" method="get" enctype="application/x-www-form-urlencoded" role="search">
+                <input class="form-control me-2" type="search" name="name" required placeholder="Search" aria-label="Search">
+                <input class="btn btn-outline-success" type="submit" value="Qidirish"></input>
+            </form>
+        </div>
+    </div>
+</nav>
+<br>
+<form action="/selling/save1" method="get" enctype="application/x-www-form-urlencoded">
+    <div class="form-control w-auto"><h3 th:text="'Joriy sahifa '+${prods.number}"></h3>
+    <select name="page">
+        <option th:each="p:${pages}" th:text="${p}" th:value="${p}"></option>
+    </select>
+    <input type="submit" class="btn btn-success" value="Olib kelish">
+    </div>
+</form>
+<div class="card">
+    <div class="card-body">
+<table class="table table-light">
+    <thead>
+     <tr>
+         <th><h3>Rasmi</h3></th>
+         <th><h3>Nomi</h3></th>
+         <th><h3>Narxi</h3></th>
+         <th><h3>Miqdori</h3></th>
+         <th><h3>Rangi</h3></th>
+         <th><h3>Nechta olinadi?</h3></th>
+         <th><h3>Tanlash</h3></th>
+     </tr>
+    </thead>
+    <tbody>
+    <script>
+        function sell() {
+            return confirm('Kiritilgan malumotlar to`g`ri ekanligini tasdiqlaysizmi?');
+        }
+
+    </script>
+    <tr th:each="p:${prods}">
+                <td><img style="height: 100px" th:src="@{'/image/get/'+${p.image}}" th:alt="${p.name}"></td>
+        <td th:text="${p.name}"><h3></h3></td>
+        <td th:text="${p.price}"><h3></h3></td>
+        <td class="p_count" th:text="${p.count}"><h3></h3></td>
+        <td th:text="${p.colors}"><h3></h3></td>
+        <form target="_blank" action="/selling/save2" method="get" onsubmit="return sell()" enctype="application/x-www-form-urlencoded">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}" required>
+            <td><input id="count" type="number" name="count" required class="form-control w-auto"></td>
+            <td><input type="submit" class="btn btn-success" value="Tanlash"></td>
+            <td><input  type="hidden" name="productId" th:value="${p.id}" required></td>
+        </form>
+    </tr>
+    </tbody>
+</table>
+        <div class="position-relative top-50 start-50 translate-middle">
+
+        </div>
+    </div>
+    </div>
+</body>
+</html>

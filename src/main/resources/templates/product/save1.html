@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Save</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
+</head>
+<body>
+<script src="/js/first.js"></script>
+<script src="../js/first.js"></script>
+<script src="/js/second.js"></script>
+<script src="../js/second.js"></script>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/auth/profile">Akkaunt</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active"  aria-current="page" href="/">Bosh sahifa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active"  href="/selling/save1">Savdo yaratish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active"  href="/selling/get-list">Savdolarni ko'rish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active"  href="/product/save">Mahsulot yaratish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active"  href="/product/list">Mahsulotlarni ko'rish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/daily/report">Kunlik hisobotlarni ko'rish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/monthly/report">Oylik hisobotlarni ko'rish</a>
+                </li>
+            </ul>
+            <form class="d-flex" action="/product/list-by-name" role="search">
+                <input class="form-control me-2" type="search" name="name" required placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Qidirish</button>
+            </form>
+        </div>
+    </div>
+</nav>
+<br>
+<style>
+    .card,.form-control{
+        border-color: #198754; /* Rangni o'zgartiring */
+    }
+</style>
+
+    <div class="position-absolute top-50 start-50 translate-middle">
+        <div class="card">
+            <div class="card-body">
+                <form action="/image" method="post" enctype="multipart/form-data">
+                    <label for="file">Rasmni yuklash: ( Majburiy emas )</label>
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+                    <input class="form-control" type="file" id="file" name="file">
+                    <input type="submit" class="btn btn-success" value="Davom etish">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,6 +1,5 @@
 package com.example.my_mvc_project.services;
 
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ImageService {

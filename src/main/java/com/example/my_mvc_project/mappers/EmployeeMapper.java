@@ -14,11 +14,13 @@ public interface EmployeeMapper {
     @Mapping(target = "id",ignore = true)
     @Mapping(target = "accountNonLocked",ignore = true)
     @Mapping(target = "role",ignore = true)
+    @Mapping(target = "sellings",ignore = true)
     Employee toEntity(EmployeeCreateDto dto);
 
     @Mapping(target = "accountNonLocked",ignore = true)
     @Mapping(target = "role",ignore = true)
     @Mapping(target = "password",ignore = true)
+    @Mapping(target = "sellings",ignore = true)
     Employee toEntity(EmployeeUpdateDto dto);
 
     @Mapping(target = "active",source = "accountNonLocked")

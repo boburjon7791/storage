@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -47,4 +49,7 @@ public class Employee {
     @Builder.Default
     @Column(name = "account_non_locked",nullable = false)
     private Boolean accountNonLocked=true;
+
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, mappedBy = "employee")
+    private Set<Selling> sellings;
 }

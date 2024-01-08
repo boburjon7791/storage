@@ -10,5 +10,7 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring")
 public interface SellingMapper {
     @Mapping(target = "product",ignore = true)
+    @Mapping(target = "firstNameOfEmployee",ignore = true)
+    @Mapping(target = "lastNameOfEmployee",ignore = true)
     SellingDto toDto(Selling selling);
 }

@@ -35,4 +35,8 @@ public class Selling {
 
     @Column(name = "sold_price",nullable = false)
     private Double soldPrice;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false,cascade = CascadeType.ALL)
+    @JoinColumn(name = "employee_id", nullable = false)
+    private Employee employee;
 }

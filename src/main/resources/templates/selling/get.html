@@ -75,6 +75,7 @@
                  <th>Miqdori</th>
                  <th>Umumiy savdo</th>
                  <th>Vaqti</th>
+                 <th>Sotuvchi</th>
              </tr>
             </thead>
             <tbody>
@@ -84,6 +85,7 @@
                 <td th:text="${s.count}"></td>
                 <td th:text="${s.soldPrice}"></td>
                 <td th:text="${s.dateTime.hour}+' : '+${s.dateTime.minute}"></td>
+                <td th:text="${s.firstNameOfEmployee}+' '+${s.lastNameOfEmployee}"></td>
             </tr>
             </tbody>
         </table>

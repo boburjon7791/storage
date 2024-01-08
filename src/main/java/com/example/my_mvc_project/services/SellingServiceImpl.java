@@ -1,13 +1,17 @@
 package com.example.my_mvc_project.services;
 
+import com.example.my_mvc_project.dtos.employee.EmployeeGetDto;
 import com.example.my_mvc_project.dtos.reports.ReportInputDto;
 import com.example.my_mvc_project.dtos.reports.SellingDto;
+import com.example.my_mvc_project.entities.Employee;
 import com.example.my_mvc_project.entities.Product;
 import com.example.my_mvc_project.entities.Selling;
 import com.example.my_mvc_project.exceptions.BadParamException;
 import com.example.my_mvc_project.exceptions.NotFoundException;
+import com.example.my_mvc_project.mappers.EmployeeMapper;
 import com.example.my_mvc_project.mappers.ProductMapper;
 import com.example.my_mvc_project.mappers.SellingMapper;
+import com.example.my_mvc_project.repositories.EmployeeRepository;
 import com.example.my_mvc_project.repositories.ProductRepository;
 import com.example.my_mvc_project.repositories.SellingRepository;
 import lombok.AllArgsConstructor;
@@ -15,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,10 +31,12 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class SellingServiceImpl implements SellingService {
+    private final EmployeeRepository employeeRepository;
     private final ProductRepository productRepository;
     private final SellingRepository sellingRepository;
     private final SellingMapper sellingMapper;
     private final ProductMapper productMapper;
+    private final EmployeeMapper employeeMapper;
 
     @Override
     @Transactional
@@ -41,12 +48,20 @@ public class SellingServiceImpl implements SellingService {
         }
         Product product = productRepository.findById(dto.productId())
                 .orElseThrow(() -> new NotFoundException("Mahsulot topilmadi"));
+        CustomUserDetails userDetails= (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println("userDetails.getEmployee() = " + userDetails.getEmployee());
+        if (userDetails.getEmployee()==null) {
+            throw new RuntimeException();
+        }
+        Employee employee = employeeRepository.findById(userDetails.getEmployee().getId())
+                .orElseThrow(() -> new NotFoundException("Ishchi topilmadi"));
         Selling selling = Selling.builder()
                 .count(dto.count())
                 .soldPrice(price)
+                .employee(employee)
                 .product(product)
                 .build();
-        Selling saved = sellingRepository.save(selling);
+        Selling saved= sellingRepository.save(selling);
         if (product.getCount()<saved.getCount() || productRepository
                 .subtractCountById(saved.getCount(),saved.getProduct().getId())<1) {
             throw new BadParamException("Xatolik yuz berdi");
@@ -96,8 +111,15 @@ public class SellingServiceImpl implements SellingService {
             if (!productRepository.existsById(sell.getProduct().getId())) {
                 throw new NotFoundException("Sotilgan mahsulot topilmadi");
             }
+            if (!employeeRepository.existsById(sell.getEmployee().getId())) {
+                throw new NotFoundException("Ishchi topilmadi");
+            }
             SellingDto dto = sellingMapper.toDto(sell);
             dto.setProduct(productMapper.toDto(sell.getProduct()));
+            EmployeeGetDto getDto = employeeMapper.toDto(sell.getEmployee());
+            dto.setFirstNameOfEmployee(getDto.getFirstName());
+            dto.setLastNameOfEmployee(getDto.getLastName());
+            System.out.println("dto = return " + dto);
             return dto;
         });
     }

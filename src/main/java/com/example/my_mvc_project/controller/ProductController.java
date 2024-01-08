@@ -21,6 +21,7 @@ import java.util.TreeSet;
 
 @Controller
 @AllArgsConstructor
+@PreAuthorize("isAuthenticated()")
 @RequestMapping("/product")
 public class ProductController {
     private final ProductService productService;
@@ -70,6 +71,7 @@ public class ProductController {
         model.addAttribute("pages",pages);
         return "product/products";
     }
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/list-by-name")
     public String listByName(
             @RequestParam(defaultValue = "0")int page,

@@ -41,9 +41,9 @@
                     <a class="nav-link active" href="/monthly/report">Oylik hisobotlarni ko'rish</a>
                 </li>
             </ul>
-            <form class="d-flex" action="/product/list-by-name" role="search">
+            <form action="/product/list" method="get" enctype="application/x-www-form-urlencoded" role="search">
                 <input class="form-control me-2" type="search" name="name" required placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Qidirish</button>
+                <input class="btn btn-outline-success" type="submit" value="Qidirish"></input>
             </form>
         </div>
     </div>

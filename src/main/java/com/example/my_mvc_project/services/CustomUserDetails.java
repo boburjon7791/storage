@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -19,7 +20,7 @@ public class CustomUserDetails implements UserDetails {
     public Employee employee;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Set.of(new SimpleGrantedAuthority(employee.getRole().name()));
+        return Set.of(new SimpleGrantedAuthority("ROLE_"+employee.getRole().name()));
     }
     @Override
     public String getPassword() {

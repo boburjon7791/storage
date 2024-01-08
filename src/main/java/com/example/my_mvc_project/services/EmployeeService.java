@@ -17,6 +17,15 @@ public interface EmployeeService {
     Page<EmployeeGetDto> employeesByName(Pageable pageable,String name);
     EmployeeGetDto changePassword(String oldPassword, String newPassword, String confirmPassword,long id);
 
+    void updateRole(long userId, String role);
+
+    void block(long userId);
+
+    void active(long userId);
+
+    EmployeeGetDto get();
+
+
 //    EmployeeGetDto login(String username, String password,HttpServletResponse response);
 
 //    void logout(HttpServletRequest request, HttpServletResponse response);

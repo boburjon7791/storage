@@ -13,7 +13,9 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -78,8 +80,10 @@ public class AuthController {
         return "auth/login";
     }*/
     @GetMapping("/change-password")
-    public String changePassword(@RequestParam long id,Model model){
-        model.addAttribute("id",id);
+    public String changePassword(Model model){
+        UserDetails userDetails= (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        EmployeeGetDto getDto=employeeService.get();
+        model.addAttribute("id",getDto.getId());
         return "auth/change_password";
     }
     @PostMapping("/change-password")

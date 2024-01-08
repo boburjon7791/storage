@@ -25,6 +25,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ForbiddenException.class,AccessDeniedException.class})
     public ModelAndView handler(RuntimeException e){
         log.error(e.getMessage());
+        e.printStackTrace();
         ModelAndView modelAndView = new ModelAndView("error_pages/forbidden");
         modelAndView.addObject("value",e.getMessage());
         return modelAndView;

@@ -22,21 +22,15 @@ public class CustomUserDetailsService implements UserDetailsService {
         System.out.println("username = " + username);
         Employee employee = employeeRepository.findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("User not found"));
-        UserDetails userDetails = User.withUsername(username)
-                .password(employee.getPassword())
-                .passwordEncoder(passwordEncoder::encode)
-                .roles(employee.getRole().name())
-                .credentialsExpired(false)
-                .accountExpired(false)
-                .accountLocked(false)
-                .disabled(false)
-                .build();
+        employee.setPassword(passwordEncoder.encode(employee.getPassword()));
+        UserDetails userDetails = new CustomUserDetails(employee);
         System.out.println("userDetails.getPassword() = " + userDetails.getPassword());
         System.out.println("userDetails = " + userDetails);
+        System.out.println("employee = " + employee);
         return userDetails;
     }
     public UserDetails loadUserById(Long id) throws UsernameNotFoundException {
-        Employee employee = employeeRepository.findByIdAndAccountNonLockedFalse(id)
+        Employee employee = employeeRepository.findByIdAndAccountNonLockedTrue(id)
                 .orElseThrow(() -> new UnauthorizedException("Unauthorized"));
         return new CustomUserDetails(employee);
     }

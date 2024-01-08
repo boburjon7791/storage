@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Employees Get</title>
+    <title>Ishchilar</title>
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="../css/bootstrap.css">
 </head>
@@ -41,7 +41,7 @@
                     <a class="nav-link active" href="/monthly/report">Oylik hisobotlarni ko'rish</a>
                 </li>
             </ul>
-            <form class="d-flex" action="/product/list-by-name" role="search">
+            <form class="d-flex" action="/manager/search" role="search">
                 <input class="form-control me-2" type="search" name="name" required placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Qidirish</button>
             </form>
@@ -49,5 +49,62 @@
     </div>
 </nav>
 <br>
+<div class="card">
+    <div class="card-body">
+        <form action="/manager/employees" method="get" enctype="application/x-www-form-urlencoded">
+            <select class="form-control w-auto" name="page" required>
+                <option th:each="p : ${pages}" th:default="${employees.number}" th:text="${p}" th:value="${p}"></option>
+            </select>
+            <h3 th:text="'Joriy sahifa ' + ${employees.number}"></h3>
+            <input class="btn btn-success" type="submit" value="Olib kelish" required>
+        </form>
+        <table class="table table-light">
+            <thead>
+            <tr>
+                <th>Ismi</th>
+                <th>Familyasi</th>
+                <th>Logini</th>
+                <th>Roli</th>
+                <th>Holati</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="e:${employees}">
+                <td th:text="${e.firstName}"></td>
+                <td th:text="${e.lastName}"></td>
+                <td th:text="${e.username}"></td>
+                <td>
+                    <form action="/manager/update/role" method="post" enctype="application/x-www-form-urlencoded">
+                        <h6 th:text="'Joriy roli : '+${e.role.name()}"></h6>
+                        <select name="role">
+                            <option th:each="r:${roles}" th:text="${r.name()}" th:value="${r.name()}"></option>
+                        </select>
+                        <input type="hidden" name="_csrf" th:value="${_csrf.token}" required>
+                        <input type="hidden" name="u_id" th:value="${e.id}" required>
+                        <br>
+                        <br>
+                        <input type="submit" class="btn btn-success" value="Davom etish" required>
+                    </form>
+                </td>
+                <td>
+                    <h3 th:text="${e.active}"></h3>
+                    <br>
+                    <form action="/manager/active" method="post" enctype="application/x-www-form-urlencoded">
+                        <input type="hidden" name="u_id" th:value="${e.id}">
+                        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+                        <input type="submit" class="btn btn-success" name="u_id" th:value="Aktivlashtirish">
+                    </form>
+                    <br>
+                    <form action="/manager/block" method="post" enctype="application/x-www-form-urlencoded">
+                        <input type="hidden" name="u_id" th:value="${e.id}">
+                        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+                        <input type="submit" class="btn btn-danger" name="u_id" th:value="Bloklash">
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 </body>
 </html>

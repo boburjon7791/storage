@@ -27,6 +27,7 @@ public class SellingsController {
     private final SellingService sellingService;
     private final ProductService productService;
     @GetMapping("/save1")
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public String save1(Model model,@RequestParam(required = false,defaultValue = "0") int page,
                         @RequestParam(required = false)String name){
         Page<ProductGetDto> products;
@@ -45,6 +46,7 @@ public class SellingsController {
         return "selling/select";
     }
     @GetMapping("/save2")
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public String save2(@RequestParam long productId,@RequestParam long count,Model model){
         ProductGetDto dto = productService.get(productId);
         if (dto.getCount()<count){
@@ -55,6 +57,7 @@ public class SellingsController {
         model.addAttribute("p_price",dto.getPrice()*count);
         return "selling/input";
     }
+    @PreAuthorize("hasRole('EMPLOYEE')")
     @PostMapping("/save")
     public String save(@Valid @ModelAttribute ReportInputDto dto,
                        @RequestParam(required = false,defaultValue = "0")int page,

@@ -25,10 +25,12 @@ import java.util.TreeSet;
 public class ProductController {
     private final ProductService productService;
     @GetMapping("/save")
+    @PreAuthorize("hasRole('MANAGER')")
     public String save(){
         return "product/save1";
     }
     @PostMapping("/save2")
+    @PreAuthorize("hasRole('MANAGER')")
     public String save(@ModelAttribute @Valid ProductCreateDto dto, Model model){
         ProductGetDto saved = productService.save(dto);
         System.out.println("dto.image() = " + dto.image());
@@ -42,6 +44,7 @@ public class ProductController {
         model.addAttribute("prod",dto);
         return "product/about";
     }
+    @PreAuthorize("hasRole('MANAGER')")
     @PostMapping("/update")
     public String update(@Valid @ModelAttribute ProductUpdateDto dto,Model model){
         ProductGetDto updated = productService.update(dto);

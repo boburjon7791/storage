@@ -20,5 +20,7 @@ public interface EmployeeMapper {
     @Mapping(target = "role",ignore = true)
     @Mapping(target = "password",ignore = true)
     Employee toEntity(EmployeeUpdateDto dto);
+
+    @Mapping(target = "active",source = "accountNonLocked")
     EmployeeGetDto toDto(Employee employee);
 }

@@ -13,5 +13,7 @@ public class EmployeeGetDto{
 
         private String username;
 
+        private Boolean active;
+
         private Role role=Role.EMPLOYEE;
 }

@@ -19,10 +19,12 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/image")
+@PreAuthorize("hasRole('EMPLOYEE')")
 public class ImageController {
     private final ImageService imageService;
     private final ProductService productService;
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/get/{imageName}",produces = MediaType.MULTIPART_FORM_DATA_VALUE)
     public @ResponseBody byte[] image(@PathVariable(required = false) String imageName){
         return imageService.get(imageName);

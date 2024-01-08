@@ -1,6 +1,7 @@
 package com.example.my_mvc_project.repositories;
 
 import com.example.my_mvc_project.entities.Employee;
+import com.example.my_mvc_project.entities.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -35,8 +36,17 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSp
     Optional<Employee> findByUsername(@NonNull String username);
 
     @Modifying
+    @Transactional
     @Query(value = "update Employee e set e.accountNonLocked=?1 where e.id=?2")
     int updateAccountLockedFalseById(boolean accountLocked,Long id);
 
-    Optional<Employee> findByIdAndAccountNonLockedFalse(Long id);
+    Optional<Employee> findByIdAndAccountNonLockedTrue(Long id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update Employee e set e.role=?2 where e.id=?1")
+    void updateRoleById(long userId, Role targetRole);
+
+    @Query("from Employee e where e.id=?1 and e.accountNonLocked=true")
+    Optional<Employee> findByIdAndTrue(long id);
 }

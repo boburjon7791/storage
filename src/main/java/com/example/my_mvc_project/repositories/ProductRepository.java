@@ -41,4 +41,5 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Modifying
     @Query(value = "update Product p set p.count=p.count-?1 where p.id=?2")
     int subtractCountById(Long count, Long id);
+
 }

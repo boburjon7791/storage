@@ -4,6 +4,7 @@ import com.example.my_mvc_project.dtos.employee.EmployeeCreateDto;
 import com.example.my_mvc_project.dtos.employee.EmployeeGetDto;
 import com.example.my_mvc_project.dtos.employee.EmployeeUpdateDto;
 import com.example.my_mvc_project.entities.Employee;
+import com.example.my_mvc_project.entities.Role;
 import com.example.my_mvc_project.exceptions.BadParamException;
 import com.example.my_mvc_project.exceptions.NotFoundException;
 import com.example.my_mvc_project.mappers.EmployeeMapper;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -118,14 +120,48 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (!newPassword.equals(confirmPassword)) {
             throw new BadParamException("Parol tasdiqlanmagan");
         }
-        Employee employee = employeeRepository.findByIdAndAccountNonLockedFalse(id)
-                .orElseThrow(() -> new NotFoundException("Foydalanuvchi topilmadi"));
-        if (!passwordEncoder.matches(oldPassword,employee.getPassword())) {
-            throw new BadParamException("Parol noto'g'ri");
+        EmployeeGetDto getDto = get();
+        if (!getDto.getId().equals(id)) {
+            throw new NotFoundException("Ishchi topilmadi");
         }
-        String encodedPassword = passwordEncoder.encode(newPassword);
-        employeeRepository.updatePasswordByPasswordAndId(encodedPassword,employee.getPassword(),id);
-        return employeeMapper.toDto(employee);
+        CustomUserDetails userDetails=(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        System.out.println("oldPassword = " + oldPassword);
+        System.out.println("userDetails.getPassword() = " + userDetails.getEmployee().getPassword());
+        System.out.println("passwordEncoder.matches(oldPassword,userDetails.getPassword()) = " + passwordEncoder.matches(oldPassword, userDetails.getPassword()));
+        if (!passwordEncoder.matches(oldPassword,userDetails.getPassword())) {
+            throw new BadParamException("parol noto'g'ri");
+        }
+        employeeRepository.updatePasswordByPasswordAndId(newPassword, oldPassword, id);
+        return getDto;
+    }
+
+    @Override
+    public void updateRole(long userId, String role) {
+        try {
+            Role targetRole = Role.valueOf(role);
+            employeeRepository.updateRoleById(userId,targetRole);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BadParamException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void block(long userId) {
+        employeeRepository.updateAccountLockedFalseById(false,userId);
+    }
+
+    @Override
+    public void active(long userId) {
+        employeeRepository.updateAccountLockedFalseById(true,userId);
+    }
+
+    @Override
+    public EmployeeGetDto get() {
+        UserDetails userDetails=(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return employeeMapper.toDto(employeeRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new NotFoundException("Ishchi topilmadi")));
     }
 
     /*@Override

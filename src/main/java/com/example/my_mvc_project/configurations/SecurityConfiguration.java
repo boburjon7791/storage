@@ -1,6 +1,5 @@
 package com.example.my_mvc_project.configurations;
 
-import com.example.my_mvc_project.exceptions.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +27,10 @@ public class SecurityConfiguration {
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
+                .formLogin(configurer -> {
+                    configurer.permitAll();
+                    configurer.defaultSuccessUrl("/",true);
+                })
                 .logout(LogoutConfigurer::permitAll).build();
     }
 }

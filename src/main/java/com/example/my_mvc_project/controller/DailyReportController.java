@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/daily/report")
-@PreAuthorize("hasRole('MANAGER')")
+@PreAuthorize("hasAnyRole('SUPER_MANAGER','MANAGER')")
 public class DailyReportController {
     private final DailyReportService dailyReportService;
 

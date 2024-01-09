@@ -27,7 +27,7 @@ import java.util.TreeSet;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/manager")
-@PreAuthorize("hasRole('MANAGER')")
+@PreAuthorize("hasAnyRole('SUPER_MANAGER','MANAGER')")
 public class AdminController {
     private final EmployeeService employeeService;
     private final ProductService productService;
@@ -51,6 +51,7 @@ public class AdminController {
         model.addAttribute("roles",roles);
         return "admin/employees";
     }
+    @PreAuthorize("hasRole('SUPER_MANAGER')")
     @PostMapping("/update/role")
     public String updateRole(@RequestParam(name = "u_id") long userId,@RequestParam String role,Model model){
         employeeService.updateRole(userId,role);
@@ -68,6 +69,7 @@ public class AdminController {
         model.addAttribute("roles",roles);
         return "admin/employees";
     }
+    @PreAuthorize("hasRole('SUPER_MANAGER')")
     @PostMapping("/block")
     public String block(@RequestParam(name = "u_id") long userId,Model model){
         employeeService.block(userId);
@@ -85,6 +87,7 @@ public class AdminController {
         model.addAttribute("roles",roles);
         return "admin/employees";
     }
+    @PreAuthorize("hasRole('SUPER_MANAGER')")
     @PostMapping("/active")
     public String unblock(@RequestParam(name = "u_id") long userId, Model model){
         employeeService.active(userId);

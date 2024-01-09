@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
-@PreAuthorize("hasRole('MANAGER')")
+@PreAuthorize("hasAnyRole('SUPER_MANAGER','MANAGER')")
 @RequestMapping("/monthly/report")
 public class MonthlyReportController {
     private final MonthlyReportService monthlyReportService;

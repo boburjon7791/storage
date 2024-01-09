@@ -19,16 +19,16 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/image")
-@PreAuthorize("isAuthenticated()")
+@PreAuthorize("permitAll()")
 public class ImageController {
     private final ImageService imageService;
     private final ProductService productService;
 
-    @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/get/{imageName}",produces = MediaType.MULTIPART_FORM_DATA_VALUE)
     public @ResponseBody byte[] image(@PathVariable(required = false) String imageName){
         return imageService.get(imageName);
     }
+    @PreAuthorize("hasAnyRole('SUPER_MANAGER','MANAGER')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String save(@RequestParam(required = false) MultipartFile file, Model model){
         String image="none";
@@ -38,13 +38,13 @@ public class ImageController {
         model.addAttribute("img", image);
         return "product/save2";
     }
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasAnyRole('SUPER_MANAGER','MANAGER')")
     @GetMapping("/update/{pId}")
     public String updateImage(@PathVariable long pId, Model model){
         model.addAttribute("p_id",pId);
         return "product/update";
     }
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasAnyRole('SUPER_MANAGER','MANAGER')")
     @PostMapping("/update2")
     public String updateCommit(
             @RequestParam MultipartFile file,

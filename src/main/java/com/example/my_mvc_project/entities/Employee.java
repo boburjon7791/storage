@@ -48,7 +48,7 @@ public class Employee {
 
     @Builder.Default
     @Column(name = "account_non_locked",nullable = false)
-    private Boolean accountNonLocked=true;
+    private Boolean accountNonLocked=false;
 
     @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, mappedBy = "employee")
     private Set<Selling> sellings;

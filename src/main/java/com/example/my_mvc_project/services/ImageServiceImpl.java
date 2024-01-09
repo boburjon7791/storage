@@ -67,6 +67,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public void deleteUnusedImages() {
         Runnable runnable=() -> {
+            // In this code errors exist. I need to correct this errors
             Page<Product> globalProducts = productRepository.findAll(PageRequest.of(0, 10));
             Set<String> globalImages = globalProducts.stream()
                     .map(Product::getImage)

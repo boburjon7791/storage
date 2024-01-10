@@ -4,6 +4,7 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
@@ -26,12 +27,12 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Mahsulot nomi bo'sh bo'lishi mumkin emas")
     @Column(nullable = false)
     private String name;
 
-    @PositiveOrZero
-    @NotNull
+    @Positive(message = "Mahsulot narxi 0 katta bo'lishi kerak")
+    @NotNull(message = "Mahsulot narxi bo'sh bo'lishi mumkin emas")
     @Column(nullable = false)
     private Double price;
 
@@ -45,8 +46,8 @@ public class Product {
     @Column(name = "date_time",nullable = false,updatable = false)
     private LocalDateTime dateTime=LocalDateTime.now();
 
-    @NotNull
-    @PositiveOrZero
+    @NotNull(message = "Mahsulot miqdori bo'sh bo'lmasligi kerak")
+    @PositiveOrZero(message = "Mahsulot miqdori 0 yoki undan katta bo'lishi kerak")
     @Column(nullable = false)
     private Long count;
 

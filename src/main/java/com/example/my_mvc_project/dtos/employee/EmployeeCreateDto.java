@@ -4,15 +4,16 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record EmployeeCreateDto (
-        @NotBlank
+        @NotBlank(message = "Ism bo'sh bo'lishi mumkin emas")
         String firstName,
 
-        @NotBlank
+        @NotBlank(message = "Familya bo'sh bo'lishi mumkin emas")
         String lastName,
 
-        @NotBlank
+        @NotBlank(message = "Login bo'sh bo'lishi mumkin emas")
         String username,
 
-        @NotBlank
+        @NotBlank(message = "Parol bo'sh bo'lishi mumkin emas")
+        @Size(min = 8,message = "Parol 8 ta belgidan kam bo'lishi mumkin emas")
         String password
 ){}

@@ -24,20 +24,20 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Ism bo'sh bo'lishi mumkin emas")
     @Column(name = "first_name",nullable = false)
     private String firstName;
 
-    @NotBlank
+    @NotBlank(message = "Familya bo'sh bo'lishi mumkin emas")
     @Column(name = "last_name",nullable = false)
     private String lastName;
 
-    @NotBlank
+    @NotBlank(message = "Login bo'sh bo'lishi mumkin emas")
     @Column(name = "username",nullable = false)
     private String username;
 
-    @NotBlank
-    @Size(min = 8)
+    @NotBlank(message = "Parol bo'sh bo'lishi mumkin emas")
+    @Size(min = 8,message = "Parol 8 ta belgidan kam bo'lishi mumkin emas")
     @Column(name = "password",nullable = false)
     private String password;
 

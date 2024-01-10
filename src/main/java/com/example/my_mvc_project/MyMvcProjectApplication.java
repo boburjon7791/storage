@@ -1,9 +1,6 @@
 package com.example.my_mvc_project;
 
 import com.example.my_mvc_project.services.ImageService;
-import com.example.my_mvc_project.services.SellingService;
-import com.example.my_mvc_project.services.report_services.DailyReportService;
-import com.example.my_mvc_project.services.report_services.MonthlyReportService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;

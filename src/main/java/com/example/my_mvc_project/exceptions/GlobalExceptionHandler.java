@@ -1,10 +1,16 @@
 package com.example.my_mvc_project.exceptions;
 
+import jakarta.validation.ConstraintDeclarationException;
+import jakarta.validation.ConstraintDefinitionException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.Banner;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,7 +36,41 @@ public class GlobalExceptionHandler {
         modelAndView.addObject("value",e.getMessage());
         return modelAndView;
     }
-
+    @ExceptionHandler(BadParamException.class)
+    public ModelAndView handler(BadParamException e){
+        log.warn(e.getMessage());
+        e.printStackTrace();
+        ModelAndView modelAndView = new ModelAndView("error_pages/bad_request");
+        modelAndView.addObject("value",e.getMessage());
+        return modelAndView;
+    }
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ModelAndView handlerValidationExceptions(ConstraintViolationException e){
+        log.warn(e.getMessage());
+        e.printStackTrace();
+        StringBuilder sb=new StringBuilder();
+        List<ConstraintViolation<?>> list = e.getConstraintViolations().stream().toList();
+        for (int i = 1; i <= list.size(); i++) {
+            sb.append(i+1).append(". ").append(list.get(i).getMessage()).append("\n");
+        }
+        ModelAndView modelAndView = new ModelAndView("error_pages/bad_request");
+        modelAndView.addObject("value",sb.toString());
+        return modelAndView;
+    }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ModelAndView handlerValidationExceptions(MethodArgumentNotValidException e){
+        log.warn(e.getMessage());
+        e.printStackTrace();
+        StringBuilder sb=new StringBuilder();
+        assert e.getDetailMessageArguments()!=null;
+        List<Object> list = Arrays.stream((e.getDetailMessageArguments())).toList();
+        for (Object o : list) {
+            sb.append(o).append("\n");
+        }
+        ModelAndView modelAndView = new ModelAndView("error_pages/bad_request");
+        modelAndView.addObject("value",sb.toString());
+        return modelAndView;
+    }
 
     @ExceptionHandler(DailyReportNotFoundException.class)
     public ModelAndView handler(DailyReportNotFoundException e){

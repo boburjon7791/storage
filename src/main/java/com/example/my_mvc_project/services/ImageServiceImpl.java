@@ -1,6 +1,7 @@
 package com.example.my_mvc_project.services;
 
 import com.example.my_mvc_project.entities.Product;
+import com.example.my_mvc_project.exceptions.BadParamException;
 import com.example.my_mvc_project.repositories.ProductRepository;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -52,7 +53,10 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public String save(MultipartFile file) {
         String filename = file.getOriginalFilename();
-        String extension = FilenameUtils.getExtension(filename);
+        String extension = Objects.requireNonNullElseGet(FilenameUtils.getExtension(filename),() -> {throw new BadParamException("Noto'g'ri fayl");});
+        if (!extension.equals("png") && !extension.equals("jpg")) {
+            throw new BadParamException("Noto'g'ri fayl berdingiz");
+        }
         try {
             Path path1 = Path.of(path + "/" + UUID.randomUUID() + "." + extension);
             Files.copy(file.getInputStream(),

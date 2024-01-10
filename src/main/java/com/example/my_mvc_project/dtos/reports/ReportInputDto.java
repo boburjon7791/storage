@@ -2,18 +2,20 @@ package com.example.my_mvc_project.dtos.reports;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import org.unbescape.xml.XmlEscape;
 
 public record ReportInputDto(
-        @NotNull
-        @PositiveOrZero
+        @NotNull(message = "Mahsulot id si bo'sh bo'lmasligi kerak")
+        @PositiveOrZero(message = "Mahsulot id si 0 yoki undan katta bo'lishi kerak")
         Long productId,
 
-        @NotNull
-        @PositiveOrZero
+        @NotNull(message = "Savdo miqdori bo'sh bo'lmasligi kerak")
+        @Positive(message = "Savdo miqdori 0 dan katta bo'lishi kerak")
         Long count,
 
-        @Nullable
-        @PositiveOrZero
+        @NotNull(message = "Savdo narxi bo'sh bo'lmasligi kerak")
+        @PositiveOrZero(message = "Savdo narxi 0 yoki undan katta bo'lishi kerak")
         Double price
 ){}

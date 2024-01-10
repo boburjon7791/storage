@@ -2,6 +2,7 @@ package com.example.my_mvc_project.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
@@ -24,8 +25,8 @@ public class Selling {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @NotNull
-    @PositiveOrZero
+    @NotNull(message = "Sotuv miqdori bo'sh bo'lmasligi kerak")
+    @Positive(message = "Sotuv miqdori 0 katta bo'lishi kerak")
     @Column(nullable = false)
     private Long count;
 
@@ -33,6 +34,8 @@ public class Selling {
     @Column(nullable = false,name = "date_time")
     private LocalDateTime dateTime= LocalDateTime.now();
 
+    @NotNull(message = "Sotuv narxi bo'sh bo'lmaslgi kerak")
+    @PositiveOrZero(message = "Sotuv narxi 0 yoki undan katta bo'lishi kerak")
     @Column(name = "sold_price",nullable = false)
     private Double soldPrice;
 

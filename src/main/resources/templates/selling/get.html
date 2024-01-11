@@ -54,7 +54,7 @@
         <div class="card position-relative">
         <div class="card-body">
         <form action="/selling/list-by-date" method="get" enctype="application/x-www-form-urlencoded">
-            <select class="form-control w-auto" name="page" required>
+            <select class="form-control w-auto" name="page">
                 <option th:each="p : ${pages}" th:default="${sells.number}" th:text="${p}" th:value="${p}"></option>
             </select>
             <label>Kun bo'yicha qidirish</label>

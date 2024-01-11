@@ -14,6 +14,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,6 +24,7 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -62,10 +66,32 @@ public class ImageServiceImpl implements ImageService {
             Files.copy(file.getInputStream(),
                     path1,
                     StandardCopyOption.REPLACE_EXISTING);
+            try {
+                BufferedImage read = ImageIO.read(file.getInputStream());
+                int type = read.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : read.getType();
+                BufferedImage resized = resize(read, type);
+                ImageIO.write(resized,extension,path1.toFile());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             return FilenameUtils.getName(path1.toString());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    private static BufferedImage resize(BufferedImage originalImage, int type){
+        double with=1000;
+        double value = originalImage.getWidth() / with;
+        double heightValue = originalImage.getHeight() / value;
+        if (heightValue>5000) {
+            throw new BadParamException("Noto'g'ri rasm berdingiz");
+        }
+        int height = (int)Math.round(heightValue);
+        BufferedImage resizedImage = new BufferedImage(1000,height,type);
+        Graphics graphics = resizedImage.getGraphics();
+        graphics.drawImage(originalImage,0,0,1000,height,null);
+        graphics.dispose();
+        return resizedImage;
     }
 
     @Override

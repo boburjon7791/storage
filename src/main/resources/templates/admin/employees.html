@@ -52,7 +52,7 @@
 <div class="card">
     <div class="card-body">
         <form action="/manager/employees" method="get" enctype="application/x-www-form-urlencoded">
-            <select class="form-control w-auto" name="page" required>
+            <select class="form-control w-auto" name="page">
                 <option th:each="p : ${pages}" th:default="${employees.number}" th:text="${p}" th:value="${p}"></option>
             </select>
             <h3 th:text="'Joriy sahifa ' + ${employees.number}"></h3>

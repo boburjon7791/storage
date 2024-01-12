@@ -83,7 +83,7 @@ public class ImageServiceImpl implements ImageService {
         double with=1000;
         double value = originalImage.getWidth() / with;
         double heightValue = originalImage.getHeight() / value;
-        if (heightValue>5000) {
+        if (heightValue>2500) {
             throw new BadParamException("Noto'g'ri rasm berdingiz");
         }
         int height = (int)Math.round(heightValue);

@@ -28,14 +28,14 @@ public class SecurityConfiguration {
                 )
                 .authorizeHttpRequests(registry ->
                         registry.requestMatchers(
-                                        "/auth/save",
-                                        "/login",
-                                        "/logout",
-                                        "/css/**",
-                                        "/js/**",
-                                        "/error_pages/**",
-                                        "/favicon.ico"
-                                )
+                           "/auth/save",
+                           "/login",
+                           "/logout",
+                           "/css/**",
+                           "/js/**",
+                           "/error_pages/**",
+                           "/favicon.ico"
+                         )
                         .permitAll()
                         .anyRequest().authenticated())
                 .formLogin(configurer -> {

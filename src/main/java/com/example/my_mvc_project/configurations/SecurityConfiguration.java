@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 
 @EnableMethodSecurity(
         prePostEnabled = true,
@@ -22,11 +23,22 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.authorizeRequests()
-                .requestMatchers("/auth/save", "/login", "/logout", "/css/**", "/js/**", "/error_pages/**", "/favicon.ico")
-                .permitAll()
-                .anyRequest().authenticated()
-                .and()
+        return http.headers(headers -> headers.xssProtection(xXssConfig ->
+                        xXssConfig.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK))
+                        .contentSecurityPolicy(cps-> cps.policyDirectives("script-src 'self'"))
+                )
+                .authorizeHttpRequests(registry ->
+                        registry.requestMatchers(
+                                        "/auth/save",
+                                        "/login",
+                                        "/logout",
+                                        "/css/**",
+                                        "/js/**",
+                                        "/error_pages/**",
+                                        "/favicon.ico"
+                                )
+                        .permitAll()
+                        .anyRequest().authenticated())
                 .formLogin(configurer -> {
                     configurer.permitAll();
                     configurer.defaultSuccessUrl("/",true);

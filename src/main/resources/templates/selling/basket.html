@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Selling Get</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
+</head>
+<body>
+<script src="../js/first.js"></script>
+<script src="/js/first.js"></script>
+<script src="../js/second.js"></script>
+<script src="/js/second.js"></script>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/auth/profile">Akkaunt</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Bosh sahifa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/selling/save1">Savdo yaratish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/selling/get-list">Savdolarni ko'rish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/product/save">Mahsulot yaratish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/product/list">Mahsulotlarni ko'rish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/daily/report">Kunlik hisobotlarni ko'rish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/monthly/report">Oylik hisobotlarni ko'rish</a>
+                </li>
+            </ul>
+            <form action="/product/list" method="get" enctype="application/x-www-form-urlencoded" role="search">
+                <input class="form-control me-2" type="search" name="name" required placeholder="Search" aria-label="Search">
+                <input class="btn btn-outline-success" type="submit" value="Qidirish"></input>
+            </form>
+        </div>
+    </div>
+</nav>
+<br>
+<div class="card">
+    <div class="card-body">
+        <h1> Savdo savatchasi</h1>
+        <table class="table table-light">
+            <thead>
+             <tr>
+                 <th>Mahsulot rasmi</th>
+                 <th>Mahsulot nomi</th>
+                 <th>Miqdori</th>
+                 <th></th>
+             </tr>
+            </thead>
+            <tbody>
+            <tr th:each="p:${basket.productsAndCounts}">
+                <td><a th:href="@{'/product/get/'+${p.key.id}}" target="_blank"><img style="height: 100px" th:src="@{'/image/get/'+${p.key.image}}" th:alt="${p.key.name}"></a></td>
+                <td><a th:href="@{'/product/get/'+${p.key.id}}" target="_blank" th:text="${p.key.name}"></a></td>
+                <td>
+                    <form action="/selling/update-basket" method="post" enctype="application/x-www-form-urlencoded">
+                      <input type="number" th:value="${p.value}" name="count" required>
+                      <input type="hidden" th:value="${p.key.id}" name="productId" required>
+                        <input type="hidden" name="_csrf" th:value="${_csrf.token}" required>
+                        <input type="submit" class="btn btn-success" value="O'zgartirish">
+                    </form>
+                </td>
+                <td>
+                    <form action="/selling/remove-product/basket" method="post" enctype="application/x-www-form-urlencoded">
+                        <input type="hidden" name="productId" th:value="${p.key.id}" required>
+                        <input type="hidden" name="_csrf" th:value="${_csrf.token}" required>
+                        <input type="submit" class="btn btn-danger" value="Olib tashlash">
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <th th:text="'Umumiy narxi : '+${basket.price}"></th>
+            </tr>
+            </tbody>
+        </table>
+        <br>
+        <form action="/selling/start-selling" method="post" enctype="application/x-www-form-urlencoded">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}" required>
+            <input type="submit" value="Savdoni amalga oshirish" class="btn btn-success">
+        </form>
+        <br>
+        <form action="/selling/clear-basket" method="post" enctype="application/x-www-form-urlencoded">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}" required>
+            <input type="submit" value="Savatni tozalash" class="btn btn-danger">
+        </form>
+    </div>
+</div>
+</body>
+</html>

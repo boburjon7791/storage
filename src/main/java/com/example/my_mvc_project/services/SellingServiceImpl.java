@@ -1,8 +1,10 @@
 package com.example.my_mvc_project.services;
 
 import com.example.my_mvc_project.dtos.employee.EmployeeGetDto;
+import com.example.my_mvc_project.dtos.product.ProductGetDto;
 import com.example.my_mvc_project.dtos.reports.ReportInputDto;
 import com.example.my_mvc_project.dtos.reports.SellingDto;
+import com.example.my_mvc_project.entities.Basket;
 import com.example.my_mvc_project.entities.Employee;
 import com.example.my_mvc_project.entities.Product;
 import com.example.my_mvc_project.entities.Selling;
@@ -11,12 +13,14 @@ import com.example.my_mvc_project.exceptions.NotFoundException;
 import com.example.my_mvc_project.mappers.EmployeeMapper;
 import com.example.my_mvc_project.mappers.ProductMapper;
 import com.example.my_mvc_project.mappers.SellingMapper;
+import com.example.my_mvc_project.repositories.BasketUtils;
 import com.example.my_mvc_project.repositories.EmployeeRepository;
 import com.example.my_mvc_project.repositories.ProductRepository;
 import com.example.my_mvc_project.repositories.SellingRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @Service
@@ -37,10 +42,62 @@ public class SellingServiceImpl implements SellingService {
     private final SellingMapper sellingMapper;
     private final ProductMapper productMapper;
     private final EmployeeMapper employeeMapper;
+    private final BasketUtils basketUtils;
+
+    @Override
+    public Basket getBasket() {
+        CustomUserDetails customUserDetails=(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return basketMatcher(basketUtils.get(customUserDetails.employee.getId()));
+    }
+
+    @Override
+    public Basket putToBasket(Long productId, Long productCount) {
+        CustomUserDetails customUserDetails=(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return basketMatcher(basketUtils.putProductToBasket
+                (customUserDetails.employee.getId(), productId, productCount));
+    }
+    public Basket basketMatcher(Basket basket){
+        AtomicReference<Double> totalSumma=new AtomicReference<>(0d);
+        basket.productsAndCounts.forEach((product, count) -> totalSumma.getAndUpdate(aDouble -> aDouble+product.getPrice()*count));
+        basket.setPrice(totalSumma.get());
+        return basket;
+    }
+
+    @Override
+    public Basket removeProductFromBasket(Long productId) {
+        CustomUserDetails customUserDetails=(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return basketMatcher(basketUtils.removeProductByEmployeeId
+                (customUserDetails.employee.getId(), productId));
+    }
+
+    @Override
+    public void clearBasket() {
+        CustomUserDetails customUserDetails=(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        basketUtils.clear(customUserDetails.employee.getId());
+    }
 
     @Override
     @Transactional
-    public Page<SellingDto> save(ReportInputDto dto, Pageable pageable) {
+    public Page<SellingDto> startSelling() {
+        CustomUserDetails customUserDetails=(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Basket basket = basketUtils.get(customUserDetails.employee.getId());
+        if (basket.productsAndCounts.isEmpty()) {
+            throw new NotFoundException("Savat bo'sh");
+        }
+        List<Long> productsIds = basket.productsAndCounts.keySet().stream().map(ProductGetDto::getId).toList();
+        List<Long> counts = basket.productsAndCounts.values().stream().toList();
+        for (int i = 0; i < productsIds.size(); i++) {
+            Product product = productRepository.findById(productsIds.get(i))
+                    .orElseThrow(() -> new NotFoundException("Mahsulot topilmadi"));
+            save(new ReportInputDto(product.getId(),counts.get(i),product.getPrice()*counts.get(i)));
+        }
+        return getSellingDtos(sellingRepository.findAllByDate
+                (PageRequest.of(0,3,
+                        Sort.by(Sort.Direction.DESC,"dateTime")), LocalDate.now()));
+    }
+
+    @Override
+    public void save(ReportInputDto dto) {
         Double price = dto.price();
         if (price==null || price==0) {
             price=productRepository.findById(dto.productId())
@@ -66,7 +123,6 @@ public class SellingServiceImpl implements SellingService {
                 .subtractCountById(saved.getCount(),saved.getProduct().getId())<1) {
             throw new BadParamException("Xatolik yuz berdi");
         }
-        return getSellingDtos(sellingRepository.findAllByDate(pageable , LocalDate.now()));
     }
 
     @Override
@@ -103,6 +159,8 @@ public class SellingServiceImpl implements SellingService {
     public Page<SellingDto> sellings(Pageable pageable) {
         return getSellingDtos(sellingRepository.findAll(pageable));
     }
+
+
     private Page<SellingDto> getSellingDtos(Page<Selling> sellings) {
         if (sellings.isEmpty()) {
             throw new NotFoundException("Savdolar topilmadi");

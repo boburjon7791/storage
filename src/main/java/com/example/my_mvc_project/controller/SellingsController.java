@@ -1,11 +1,10 @@
 package com.example.my_mvc_project.controller;
 
 import com.example.my_mvc_project.dtos.product.ProductGetDto;
-import com.example.my_mvc_project.dtos.reports.ReportInputDto;
 import com.example.my_mvc_project.dtos.reports.SellingDto;
+import com.example.my_mvc_project.entities.Basket;
 import com.example.my_mvc_project.services.ProductService;
 import com.example.my_mvc_project.services.SellingService;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,16 +25,36 @@ import java.util.concurrent.atomic.AtomicReference;
 public class SellingsController {
     private final SellingService sellingService;
     private final ProductService productService;
-    @GetMapping("/save1")
+    @GetMapping("/get-basket")
     @PreAuthorize("hasRole('EMPLOYEE')")
-    public String save1(Model model,@RequestParam(required = false,defaultValue = "0") int page,
-                        @RequestParam(required = false)String name){
-        Page<ProductGetDto> products;
-        if (name!=null && name.isBlank()) {
-             products = productService.productsByName(PageRequest.of(page, 3),name);
-        }else {
-            products=productService.products(PageRequest.of(page,3));
-        }
+    public String getBasket(Model model){
+        Basket basket = sellingService.getBasket();
+        model.addAttribute("basket",basket);
+        return "selling/basket";
+    }
+
+    @PostMapping("/update-basket")
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public String updateBasket(Model model,@RequestParam long productId,@RequestParam long count){
+        Basket basket = sellingService.putToBasket(productId, count);
+        model.addAttribute("basket",basket);
+        return "selling/basket";
+    }
+
+    @PostMapping("/remove-product/basket")
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public String updateBasket(Model model,@RequestParam long productId){
+        Basket basket = sellingService.removeProductFromBasket(productId);
+        model.addAttribute("basket",basket);
+        return "selling/basket";
+    }
+
+    @PostMapping("/clear-basket")
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public String updateBasket(Model model){
+        sellingService.clearBasket();
+
+        Page<ProductGetDto> products=productService.products(PageRequest.of(0,3));
         model.addAttribute("prods",products);
         int pages = products.getTotalPages();
         List<Integer> pagesList=new LinkedList<>();
@@ -45,24 +64,12 @@ public class SellingsController {
         model.addAttribute("pages", pagesList);
         return "selling/select";
     }
-    @GetMapping("/save2")
+
+    @PostMapping("/start-selling")
     @PreAuthorize("hasRole('EMPLOYEE')")
-    public String save2(@RequestParam long productId,@RequestParam long count,Model model){
-        ProductGetDto dto = productService.get(productId);
-        if (dto.getCount()<count){
-            throw new RuntimeException("Afsus! Ushbu mahsulotdan faqatgina %s ta qoldi".formatted(dto.getCount()));
-        }
-        model.addAttribute("p_id",productId);
-        model.addAttribute("count",count);
-        model.addAttribute("p_price",dto.getPrice()*count);
-        return "selling/input";
-    }
-    @PreAuthorize("hasRole('EMPLOYEE')")
-    @PostMapping("/save")
-    public String save(@Valid @ModelAttribute ReportInputDto dto,
-                       @RequestParam(required = false,defaultValue = "0")int page,
-                       Model model){
-        Page<SellingDto> sellings = sellingService.save(dto,PageRequest.of(page,5,Sort.by("dateTime").descending()));
+    public String startSelling(Model model){
+        Page<SellingDto> sellings = sellingService.startSelling();
+        sellingService.clearBasket();
         model.addAttribute("sells",sellings);
         AtomicReference<String> date= new AtomicReference<>("Kuni yozilmagan");
         sellings.stream()
@@ -73,9 +80,55 @@ public class SellingsController {
                     System.out.println("string = " + string);
                     date.set(string);
                 });
+        List<Integer> pages=new LinkedList<>();
+        for (int i = 0; i < sellings.getTotalPages(); i++) {
+            pages.add(i);
+        }
         model.addAttribute("now", LocalDate.now());
+        model.addAttribute("pages",pages);
         model.addAttribute("date",date);
         return "selling/get";
+    }
+    @GetMapping("/save1")
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public String save1(Model model,@RequestParam(required = false,defaultValue = "0") int page){
+        Page<ProductGetDto> products=productService.products(PageRequest.of(page,3));
+        model.addAttribute("prods",products);
+        int pages = products.getTotalPages();
+        List<Integer> pagesList=new LinkedList<>();
+        for (int i = 0; i < pages; i++) {
+            pagesList.add(i);
+        }
+        model.addAttribute("pages", pagesList);
+        return "selling/select";
+    }
+    @GetMapping("/save1/by-name")
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public String save1(Model model,@RequestParam(required = false)String name){
+        Page<ProductGetDto> products = productService.productsByName(PageRequest.of(0, 10),name);
+        model.addAttribute("prods",products);
+        int pages = products.getTotalPages();
+        List<Integer> pagesList=new LinkedList<>();
+        for (int i = 0; i < pages; i++) {
+            pagesList.add(i);
+        }
+        model.addAttribute("pages", pagesList);
+        return "selling/select";
+    }
+
+    @PostMapping("/select")
+    public String save(@RequestParam long productId,@RequestParam long count,Model model){
+        Basket basket = sellingService.putToBasket(productId, count);
+        model.addAttribute("basket",basket);
+        Page<ProductGetDto> products=productService.products(PageRequest.of(0,3));
+        model.addAttribute("prods",products);
+        int pages = products.getTotalPages();
+        List<Integer> pagesList=new LinkedList<>();
+        for (int i = 0; i < pages; i++) {
+            pagesList.add(i);
+        }
+        model.addAttribute("pages", pagesList);
+        return "selling/select";
     }
     @GetMapping("/get-date/{date}")
     public String getByDate(@PathVariable LocalDate date,Model model){

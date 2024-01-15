@@ -26,6 +26,9 @@
                     <a class="nav-link active"  href="/selling/save1">Savdo yaratish</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link active" target="_blank" href="/selling/get-basket">Savatchani ko'rish</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link active"  href="/selling/get-list">Savdolarni ko'rish</a>
                 </li>
                 <li class="nav-item">
@@ -41,7 +44,7 @@
                     <a class="nav-link active" href="/monthly/report">Oylik hisobotlarni ko'rish</a>
                 </li>
             </ul>
-            <form class="d-flex" action="/selling/save1" role="search">
+            <form class="d-flex" action="/selling/save1/by-name" role="search">
                 <input class="form-control me-2" type="search" name="name" required placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Qidirish</button>
             </form>
@@ -84,7 +87,7 @@
         <td th:text="${p.price}"><h3></h3></td>
         <td class="p_count" th:text="${p.count}"><h3></h3></td>
         <td th:text="${p.colors}"><h3></h3></td>
-        <form target="_blank" action="/selling/save2" method="get" onsubmit="return sell()" enctype="application/x-www-form-urlencoded">
+        <form action="/selling/select" method="post" onsubmit="return sell()" enctype="application/x-www-form-urlencoded">
             <input type="hidden" name="_csrf" th:value="${_csrf.token}" required>
             <td><input id="count" type="number" name="count" required class="form-control w-auto"></td>
             <td><input type="submit" class="btn btn-success" value="Tanlash"></td>

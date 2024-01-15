@@ -43,6 +43,7 @@ public class SellingServiceImpl implements SellingService {
     private final ProductMapper productMapper;
     private final EmployeeMapper employeeMapper;
     private final BasketUtils basketUtils;
+    private final ProductService productService;
 
     @Override
     public Basket getBasket() {
@@ -87,8 +88,7 @@ public class SellingServiceImpl implements SellingService {
         List<Long> productsIds = basket.productsAndCounts.keySet().stream().map(ProductGetDto::getId).toList();
         List<Long> counts = basket.productsAndCounts.values().stream().toList();
         for (int i = 0; i < productsIds.size(); i++) {
-            Product product = productRepository.findById(productsIds.get(i))
-                    .orElseThrow(() -> new NotFoundException("Mahsulot topilmadi"));
+            ProductGetDto product = productService.get(productsIds.get(i));
             save(new ReportInputDto(product.getId(),counts.get(i),product.getPrice()*counts.get(i)));
         }
         return getSellingDtos(sellingRepository.findAllByDate

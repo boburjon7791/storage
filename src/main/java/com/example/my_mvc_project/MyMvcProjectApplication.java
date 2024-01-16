@@ -1,7 +1,9 @@
 package com.example.my_mvc_project;
 
+import com.example.my_mvc_project.services.EmployeeService;
 import com.example.my_mvc_project.services.ImageService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 @Slf4j
 @AllArgsConstructor
@@ -25,6 +26,7 @@ import java.util.Set;
 @EnableScheduling
 public class MyMvcProjectApplication {
 	private final ImageService imageService;
+	private final Object object=new Object();
 
 	public static void main(String[] args) {
 		SpringApplication.run(MyMvcProjectApplication.class, args);

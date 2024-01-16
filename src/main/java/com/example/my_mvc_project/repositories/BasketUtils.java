@@ -36,9 +36,7 @@ public class BasketUtils {
             }else {
                 basket=new Basket();
             }
-            Long productCount = productRepository.findById(productId)
-                    .orElseThrow(() -> new NotFoundException("Mahsulot topilmadi"))
-                    .getCount();
+            Long productCount = productService.get(productId).getCount();
             if (productCount <count) {
                 throw new NotFoundException("Ushbu mahsulotdan faqatgina %s ta qoldi".formatted(productCount));
             }

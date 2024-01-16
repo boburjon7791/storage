@@ -73,8 +73,8 @@
             </thead>
             <tbody>
             <tr th:each="r:${dailyReport}">
-                <td th:text="${r.employee.firstName}"></td>
-                <td th:text="${r.employee.lastName}"></td>
+                <td><a th:href="@{'/manager/get/'+${r.employee.id}}" th:text="${r.employee.firstName}"></a></td>
+                <td><a th:href="@{'/manager/get/'+${r.employee.id}}" th:text="${r.employee.lastName}"></a></td>
                 <td><a th:href="@{'/selling/get-date/'+${dateC}}" th:text="${r.summa}">></a></td>
             </tr>
             <tr>

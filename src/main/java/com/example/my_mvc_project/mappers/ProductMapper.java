@@ -12,11 +12,9 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
     ProductGetDto toDto(Product product);
-    @Mapping(target = "dateTime",ignore = true)
     @Mapping(target = "sellings",ignore = true)
     Product toEntity(ProductUpdateDto dto);
     @Mapping(target = "id",ignore = true)
-    @Mapping(target = "dateTime",ignore = true)
     @Mapping(target = "sellings",ignore = true)
     Product toEntity(ProductCreateDto dto);
 }

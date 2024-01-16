@@ -42,10 +42,6 @@ public class Product {
     @Nullable
     private String image;
 
-    @Builder.Default
-    @Column(name = "date_time",nullable = false,updatable = false)
-    private LocalDateTime dateTime=LocalDateTime.now();
-
     @NotNull(message = "Mahsulot miqdori bo'sh bo'lmasligi kerak")
     @PositiveOrZero(message = "Mahsulot miqdori 0 yoki undan katta bo'lishi kerak")
     @Column(nullable = false)

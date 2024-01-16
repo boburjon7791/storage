@@ -2,13 +2,15 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Not Found</title>
+    <title>Ishchilar</title>
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="../css/bootstrap.css">
 </head>
 <body>
 <script src="/js/first.js"></script>
+<script src="../js/first.js"></script>
 <script src="/js/second.js"></script>
+<script src="../js/second.js"></script>
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
         <a class="navbar-brand" href="/auth/profile">Akkaunt</a>
@@ -45,7 +47,7 @@
                     <a class="nav-link active" href="/manager/get-total/sells-monthly">Oylik kassani ko'rish</a>
                 </li>
             </ul>
-            <form class="d-flex" action="/product/list-by-name" role="search">
+            <form class="d-flex" action="/manager/search" role="search">
                 <input class="form-control me-2" type="search" name="name" required placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Qidirish</button>
             </form>
@@ -55,25 +57,39 @@
 <br>
 <div class="card">
     <div class="card-body">
-        <div style="text-align: center">
-            <form action="/manager/get-total/sells-daily" method="get" enctype="application/x-www-form-urlencoded">
-                <div class="d-flex">
-                    <div class="mr-2">
-                        <label>Kunni tanlang</label>
-                        <input type="date" required name="date">
-                        <input type="submit" class="btn btn-success" value="Qidirish">
-                    </div>
-                </div>
-            </form>
-        </div>
+        <form action="/manager/get-total/sells-monthly">
+                <select name="year" class="form-control w-auto">
+                    <option th:each="y:${years}" th:text="${y}" th:value="${y}"></option>
+                </select>
+                <br>
+                <input type="submit" class="btn btn-success" value="Olib kelish">
+        </form>
+        <h1 th:text="${year}+'-yil uchun'"></h1>
+        <table class="table table-light">
+            <thead>
+            <tr>
+                <th>Ismi</th>
+                <th>Familya</th>
+                <th>Oy</th>
+                <th>Summa</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="r: ${monthlyReport}">
+                <td><a th:href="@{'/manager/get/'+${r.employee.id}}" th:text="${r.employee.firstName}"></a></td>
+                <td><a th:href="@{'/manager/get/'+${r.employee.id}}" th:text="${r.employee.lastName}"></a></td>
+                <td th:text="${r.month.name()}"></td>
+                <td th:text="${r.totalSumma}"></td>
+            </tr>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th th:text="'Umumiy summa : '+${totalSumma}"></th>
+            </tr>
+            </tbody>
+        </table>
     </div>
-</div>
-<div style="text-align: center">
-    <img style="width: 1000px" src="/error_pages/not_found.png" alt="Not found">
-    <br>
-    <h6 th:text="${value}"></h6>
-    <br>
-    <button><a href="/">Home page</a></button>
 </div>
 </body>
 </html>

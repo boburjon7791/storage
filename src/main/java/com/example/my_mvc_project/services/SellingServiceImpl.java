@@ -4,11 +4,15 @@ import com.example.my_mvc_project.dtos.employee.EmployeeGetDto;
 import com.example.my_mvc_project.dtos.product.ProductGetDto;
 import com.example.my_mvc_project.dtos.reports.ReportInputDto;
 import com.example.my_mvc_project.dtos.reports.SellingDto;
+import com.example.my_mvc_project.dtos.reports.SoldPersonDaily;
+import com.example.my_mvc_project.dtos.reports.SoldPersonMonthly;
 import com.example.my_mvc_project.entities.Basket;
 import com.example.my_mvc_project.entities.Employee;
 import com.example.my_mvc_project.entities.Product;
 import com.example.my_mvc_project.entities.Selling;
+import com.example.my_mvc_project.enums.MonthCopy;
 import com.example.my_mvc_project.exceptions.BadParamException;
+import com.example.my_mvc_project.exceptions.DailyReportNotFoundException;
 import com.example.my_mvc_project.exceptions.NotFoundException;
 import com.example.my_mvc_project.mappers.EmployeeMapper;
 import com.example.my_mvc_project.mappers.ProductMapper;
@@ -17,12 +21,11 @@ import com.example.my_mvc_project.repositories.BasketUtils;
 import com.example.my_mvc_project.repositories.EmployeeRepository;
 import com.example.my_mvc_project.repositories.ProductRepository;
 import com.example.my_mvc_project.repositories.SellingRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.*;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,11 +33,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SellingServiceImpl implements SellingService {
     private final EmployeeRepository employeeRepository;
     private final ProductRepository productRepository;
@@ -44,6 +49,72 @@ public class SellingServiceImpl implements SellingService {
     private final EmployeeMapper employeeMapper;
     private final BasketUtils basketUtils;
     private final ProductService productService;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final EmployeeService employeeService;
+    @Value(value = "${pages.size}")
+    private Integer pagesSize;
+
+    @Override
+    public List<SoldPersonDaily> dailyReport(LocalDate date) {
+        String sql= """
+                select user_id, sum(total) as total
+                from (
+                         select u.id as user_id, sum(s.sold_price) as total
+                         from selling s inner join users u on u.id = s.employee_id and u.role='EMPLOYEE'
+                         where date(date_time)=:date
+                         group by s.date_time, u.id, u.first_name, u.last_name
+                     ) as t
+                group by user_id
+                order by total desc
+                """;
+        Map<String, Object> map = Map.of(
+                "date", date
+        );
+        map.forEach((s, o) -> System.out.println(s+" : "+o));
+        List<SoldPersonDaily> soldPersonDailyList = namedParameterJdbcTemplate.query(sql, map, (rs, rowNum) -> new SoldPersonDaily(
+                employeeService.get(rs.getLong("user_id")),
+                rs.getDouble("total")
+                ));
+        if (soldPersonDailyList.isEmpty()) {
+            throw new DailyReportNotFoundException(
+                    "%s-yil %s-%s kuni hech narsa sotilmagan".formatted(
+                    date.getYear(), date.getDayOfMonth(), MonthCopy.intValue(date.getMonthValue()))
+            );
+        }
+        return soldPersonDailyList;
+    }
+
+    @Override
+    public List<SoldPersonMonthly> monthlyReport(int year) {
+        String sql= """
+                select month, user_id, sum(total) as total
+                from (
+                         select extract(month from s.date_time) as month, u.id as user_id, sum(s.sold_price) as total
+                         from selling s inner join users u on u.id = s.employee_id and u.role='EMPLOYEE'
+                         where extract(year from date(date_time))=:year
+                         group by s.date_time, u.id, u.first_name, u.last_name
+                     ) as t
+                group by month, user_id
+                order by month desc, total desc
+                """;
+
+        Map<String, Object> map = Map.of(
+                "year", year
+        );
+
+        List<SoldPersonMonthly> soldPersonMonthlyList = namedParameterJdbcTemplate.query(sql, map, (rs, rowNum) -> new SoldPersonMonthly(
+                employeeService.get(rs.getLong("user_id")),
+                rs.getDouble("total"),
+                MonthCopy.intValue(rs.getInt("month"))
+        ));
+        if (soldPersonMonthlyList.isEmpty()) {
+            throw new NotFoundException(
+                    "%s-yil da hech narsa sotilmagan".formatted(
+                            year)
+            );
+        }
+        return soldPersonMonthlyList;
+    }
 
     @Override
     public Basket getBasket() {
@@ -92,7 +163,7 @@ public class SellingServiceImpl implements SellingService {
             save(new ReportInputDto(product.getId(),counts.get(i),product.getPrice()*counts.get(i)));
         }
         return getSellingDtos(sellingRepository.findAllByDate
-                (PageRequest.of(0,3,
+                (PageRequest.of(0,pagesSize,
                         Sort.by(Sort.Direction.DESC,"dateTime")), LocalDate.now()));
     }
 

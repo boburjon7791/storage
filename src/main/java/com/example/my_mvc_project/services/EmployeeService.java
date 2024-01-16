@@ -25,6 +25,8 @@ public interface EmployeeService {
 
     EmployeeGetDto get();
 
+    EmployeeGetDto get(long id);
+
 
 //    EmployeeGetDto login(String username, String password,HttpServletResponse response);
 

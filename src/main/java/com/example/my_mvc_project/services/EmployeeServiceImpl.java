@@ -164,6 +164,12 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .orElseThrow(() -> new NotFoundException("Ishchi topilmadi")));
     }
 
+    @Override
+    public EmployeeGetDto get(long id) {
+        return employeeMapper.toDto(employeeRepository.findById(id)
+                .orElseThrow(()->new NotFoundException("Ishchi topilmadi")));
+    }
+
     /*@Override
     public EmployeeGetDto login(String username, String password,HttpServletResponse response) {
         Employee employee = employeeRepository.findByUsername(username)

@@ -2,6 +2,8 @@ package com.example.my_mvc_project.services;
 
 import com.example.my_mvc_project.dtos.reports.ReportInputDto;
 import com.example.my_mvc_project.dtos.reports.SellingDto;
+import com.example.my_mvc_project.dtos.reports.SoldPersonDaily;
+import com.example.my_mvc_project.dtos.reports.SoldPersonMonthly;
 import com.example.my_mvc_project.entities.Basket;
 import com.example.my_mvc_project.entities.Selling;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,8 @@ import java.util.List;
 
 
 public interface SellingService {
+   List<SoldPersonDaily> dailyReport(LocalDate date);
+   List<SoldPersonMonthly> monthlyReport(int month);
    Basket getBasket();
    Basket putToBasket(Long productId,Long productCount);
    Basket removeProductFromBasket(Long productId);

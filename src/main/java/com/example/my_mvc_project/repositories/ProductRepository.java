@@ -23,8 +23,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Query(value = "from Product p where p.name like concat('%',?1,'%')")
     Page<Product> findAllByNameContainingIgnoreCase(String name, Pageable pageable);
 
-    @Query(value = "from Product p where ?1 = p.colors")
-    Page<Product> findAllByColor(String color,Pageable pageable);
+    @Query(value = "from Product p where ?1 = p.about")
+    Page<Product> findAllByAbout(String about,Pageable pageable);
 
     @Query(value = "from Product p where p.price between ?1 and ?2")
     Page<Product> findAllByBetweenPrices(Double priceStart, Double priceEnd, Pageable pageable);

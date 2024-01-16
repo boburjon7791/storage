@@ -16,7 +16,7 @@ public interface ProductService {
     ProductGetDto updateCountById(Long count, Long id);
     Page<ProductGetDto> products(Pageable pageable);
     Page<ProductGetDto> productsByName(Pageable pageable,String name);
-    Page<ProductGetDto> productsByColor(Pageable pageable,String color);
+    Page<ProductGetDto> productsByAbout(Pageable pageable,String about);
     Page<ProductGetDto> productsByPrice(Pageable pageable,Double priceStart,Double priceEnd);
     Page<ProductGetDto> productsByCount(Pageable pageable,Long countStart,Long countEnd);
 

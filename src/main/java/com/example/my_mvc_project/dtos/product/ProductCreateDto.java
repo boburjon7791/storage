@@ -25,5 +25,5 @@ public record ProductCreateDto(
         String image,
 
         @Nullable
-        String colors
+        String about
 ) {}

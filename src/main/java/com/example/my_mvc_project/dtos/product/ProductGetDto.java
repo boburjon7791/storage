@@ -20,5 +20,5 @@ public class ProductGetDto{
 
     private  String image;
 
-    private  String colors;
+    private  String about;
 }

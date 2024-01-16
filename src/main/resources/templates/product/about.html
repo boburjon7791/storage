@@ -99,8 +99,8 @@
                 <br>
                 <a class="btn btn-success" th:href="@{'/image/update/'+${prod.id}}">Mahsulot rasmini o'zgartirish</a>
                 <br>
-                <label>Bir nechta rangda bo'lsa vergul ( , ) bilan ajrating</label>
-                <input type="text" id="formGroupExampleInput5" th:value="${prod.colors}" name="colors" class="form-control" placeholder="Rangini kiriting">
+                <label>Mahsulot haqida</label>
+                <input type="text" id="formGroupExampleInput5" th:value="${prod.about}" name="about" class="form-control" placeholder="Mahsulot haqida">
                 <br>
                 <input type="submit" class="btn btn-success" value="Yangilash" required>
                 <a onclick="return confirm('Rostan ham bekor qilmoqchimisiz?')" class="btn btn-danger" th:href="@{'/product/about?id='+${prod.id}}">Bekor qilish</a>

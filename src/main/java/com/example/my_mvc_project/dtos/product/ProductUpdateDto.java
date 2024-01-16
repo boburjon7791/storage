@@ -29,5 +29,5 @@ public record ProductUpdateDto(
         String image,
 
         @Nullable
-        String colors
+        String about
 ) {}

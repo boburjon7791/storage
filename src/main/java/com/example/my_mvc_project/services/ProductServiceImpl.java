@@ -38,7 +38,6 @@ public class ProductServiceImpl implements ProductService {
         if (productRepository.existsByNameAndIdNotMatches(dto.name(),dto.id())) {
             throw new BadParamException("Ushbu mahsulot allaqachon mavjud");
         }
-        System.out.println("dto.colors() = " + dto.colors());
         return productMapper.toDto(productRepository.save(productMapper.toEntity(dto)));
     }
 
@@ -80,8 +79,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductGetDto> productsByColor(Pageable pageable, String color) {
-        Page<ProductGetDto> products = productRepository.findAllByColor(color, pageable)
+    public Page<ProductGetDto> productsByAbout(Pageable pageable, String about) {
+        Page<ProductGetDto> products = productRepository.findAllByAbout(about, pageable)
                 .map(productMapper::toDto);
         if (products.isEmpty()) {
             throw new NotFoundException("Mahsulotlar topilmadi");

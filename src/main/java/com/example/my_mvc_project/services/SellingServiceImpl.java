@@ -60,7 +60,7 @@ public class SellingServiceImpl implements SellingService {
                 select user_id, sum(total) as total
                 from (
                          select u.id as user_id, sum(s.sold_price) as total
-                         from selling s inner join users u on u.id = s.employee_id and u.role='EMPLOYEE'
+                         from selling s inner join users u on u.id = s.employee_id
                          where date(date_time)=:date
                          group by s.date_time, u.id, u.first_name, u.last_name
                      ) as t
@@ -90,7 +90,7 @@ public class SellingServiceImpl implements SellingService {
                 select month, user_id, sum(total) as total
                 from (
                          select extract(month from s.date_time) as month, u.id as user_id, sum(s.sold_price) as total
-                         from selling s inner join users u on u.id = s.employee_id and u.role='EMPLOYEE'
+                         from selling s inner join users u on u.id = s.employee_id
                          where extract(year from date(date_time))=:year
                          group by s.date_time, u.id, u.first_name, u.last_name
                      ) as t

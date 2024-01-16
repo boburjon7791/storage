@@ -37,7 +37,7 @@ public class Product {
     private Double price;
 
     @Nullable
-    private String colors;
+    private String about;
 
     @Nullable
     private String image;

@@ -92,7 +92,7 @@
         <td th:text="${p.name}"><h3></h3></td>
         <td th:text="${p.price}"><h3></h3></td>
         <td class="p_count" th:text="${p.count}"><h3></h3></td>
-        <td th:text="${p.colors}"><h3></h3></td>
+        <td th:text="${p.about}"><h3></h3></td>
         <form action="/selling/select" method="post" onsubmit="return sell()" enctype="application/x-www-form-urlencoded">
             <input type="hidden" name="_csrf" th:value="${_csrf.token}" required>
             <td><input id="count" type="number" name="count" required class="form-control w-auto"></td>

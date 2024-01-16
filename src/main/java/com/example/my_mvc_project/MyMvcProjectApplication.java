@@ -8,9 +8,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @AllArgsConstructor
@@ -39,5 +46,18 @@ public class MyMvcProjectApplication {
 	@Bean
 	public PasswordEncoder passwordEncoder(){
 		return new BCryptPasswordEncoder();
+	}
+	@Scheduled(cron = "0 * * * * *")
+	public void deleteImages(){
+		Iterator<Map.Entry<String, LocalDateTime>> iterator =
+				ImageService.cachedImages.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Map.Entry<String, LocalDateTime> entry = iterator.next();
+			if (entry.getValue().isBefore(LocalDateTime.now())) {
+				iterator.remove();
+				imageService.delete(entry.getKey());
+				System.out.println(entry.getKey()+" was deleted");
+			}
+		}
 	}
 }

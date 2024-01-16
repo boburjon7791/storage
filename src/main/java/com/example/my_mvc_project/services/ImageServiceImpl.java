@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
@@ -74,7 +75,9 @@ public class ImageServiceImpl implements ImageService {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            return FilenameUtils.getName(path1.toString());
+            String name = FilenameUtils.getName(path1.toString());
+            cachedImages.put(name, LocalDateTime.now().plusHours(1));
+            return name;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -126,6 +129,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     @SneakyThrows
+    @Async
     public void delete(String img) {
         Files.deleteIfExists(Path.of(path+"/"+img));
     }

@@ -12,9 +12,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -22,12 +25,19 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final ImageService imageService;
+
     @Override
     public ProductGetDto save(ProductCreateDto dto) {
         if (productRepository.existsByName(dto.name())) {
             throw new BadParamException("Ushbu mahsulot allaqachon mavjud");
         }
-        return productMapper.toDto(productRepository.save(productMapper.toEntity(dto)));
+        ProductGetDto getDto = productMapper.toDto(productRepository.save(productMapper.toEntity(dto)));
+        ImageService.cachedImages.remove(getDto.getImage());
+        System.out.println("After removing...");
+        ImageService.cachedImages.forEach((s, time) -> System.out.println(s+" : "+time));
+        return getDto;
     }
 
     @Override
@@ -117,7 +127,20 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public int updateImage(String saved, long productId) {
-        return productRepository.updateImageById(saved, productId);
+        String sql= """
+                    select image
+                    from product
+                    where id=:id
+                    """;
+        Map<String, Long> map = Map.of("id", productId);
+        RowMapper<String> rowMapper=(rs, rowNum) -> rs.getString("image");
+        String productImage = namedParameterJdbcTemplate.queryForObject(sql, map, rowMapper);
+        int i = productRepository.updateImageById(saved, productId);
+        if (i>0) {
+            System.out.println(productImage+" is deleting");
+            imageService.delete(productImage);
+        }
+        return i;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.example.my_mvc_project.configurations;
 
+import com.example.my_mvc_project.exceptions.ForbiddenException;
+import com.example.my_mvc_project.exceptions.UnauthorizedException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -35,7 +37,8 @@ public class SecurityConfiguration {
                            "/css/**",
                            "/js/**",
                            "/error_pages/**",
-                           "/favicon.ico"
+                           "/favicon.ico",
+                           "/source/**"
                          )
                         .permitAll()
                         .anyRequest().authenticated())

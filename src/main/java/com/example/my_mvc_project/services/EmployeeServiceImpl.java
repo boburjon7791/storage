@@ -6,6 +6,7 @@ import com.example.my_mvc_project.dtos.employee.EmployeeUpdateDto;
 import com.example.my_mvc_project.entities.Employee;
 import com.example.my_mvc_project.entities.Role;
 import com.example.my_mvc_project.exceptions.BadParamException;
+import com.example.my_mvc_project.exceptions.ForbiddenException;
 import com.example.my_mvc_project.exceptions.NotFoundException;
 import com.example.my_mvc_project.mappers.EmployeeMapper;
 import com.example.my_mvc_project.repositories.EmployeeRepository;
@@ -16,17 +17,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Value(value = "${pages.size}")
     private Integer pageSize;
     private final EmployeeRepository employeeRepository;
@@ -63,13 +68,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeGetDto get(HttpServletRequest request) {
-        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        EmployeeGetDto getDto = employeeMapper.toDto(employeeRepository.findByUsername(principal.getUsername())
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return employeeMapper.toDto(employeeRepository.findByIdAndAccountNonLockedTrue(customUserDetails.employee.getId())
                 .orElseThrow(() -> new NotFoundException("Ishchi topilmadi")));
-        if (!principal.getUsername().equals(getDto.getUsername())) {
-            throw new AccessDeniedException("Siz begona odamning malumotlarini olishga urindingiz. Bu mumkin emas!");
-        }
-        return getDto;
     }
 
     @Override
@@ -140,11 +141,35 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void block(long userId) {
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Employee employee = customUserDetails.employee;
+        if (employee.getId().equals(userId)) {
+            throw new BadParamException("Siz o'zingizni bloklay olmaysiz");
+        }
+        String sql= """
+                    select role
+                    from users
+                    where id=:id
+                    """;
+        String targetRole = Optional.ofNullable(namedParameterJdbcTemplate
+                        .queryForObject(sql, Map.of("id", userId), (rs, rowNum) -> rs.getString("role")))
+                .orElseThrow(()->new NotFoundException("Ishchi topilmadi"));
+        String currentRole = Optional.ofNullable(namedParameterJdbcTemplate
+                        .queryForObject(sql, Map.of("id", employee.getId()), (rs, rowNum) -> rs.getString("role")))
+                .orElseThrow(()->new NotFoundException("Ishchi topilmadi"));
+
+        if (targetRole.equals("SUPER_MANAGER") && currentRole.equals("MANAGER")) {
+            throw new ForbiddenException("Siz bu ishni qilishingiz mumkin emas");
+        }
         employeeRepository.updateAccountLockedFalseById(false,userId);
     }
 
     @Override
     public void active(long userId) {
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (customUserDetails.employee.getId().equals(userId)) {
+            throw new BadParamException("Siz o'zingizni aktivlashtira olmaysiz");
+        }
         employeeRepository.updateAccountLockedFalseById(true,userId);
     }
 

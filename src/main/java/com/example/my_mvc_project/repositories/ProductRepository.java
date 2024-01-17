@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
     boolean existsByName(String name);
 
-    @Query(value = "from Product p where p.name like concat('%',?1,'%')")
+    @Query(value = "from Product p where upper(p.name) like upper(concat('%',?1,'%')) ")
     Page<Product> findAllByNameContainingIgnoreCase(String name, Pageable pageable);
 
     @Query(value = "from Product p where ?1 = p.about")

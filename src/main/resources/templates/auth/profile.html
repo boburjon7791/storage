@@ -13,14 +13,14 @@
 <script src="/js/second.js"></script>
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">Bizning sayt</a>
+        <a class="navbar-brand" href="/">Bosh sahifa</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active"  aria-current="page" href="/">Bosh sahifa</a>
+                    <a class="nav-link active"  aria-current="page" href="/auth/profile">Akkaunt</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active"  href="/selling/save1">Savdo yaratish</a>
@@ -82,7 +82,7 @@
                     <input type="hidden" id="formGroupExampleInput4" th:value="${emp.id}" name="id" required>
                     <br>
                     <input type="submit" class="btn btn-success" value="Saqlash" required>
-                    <a class="btn btn-danger" th:href="@{'/auth/profile?id='+${emp.id}}">Bekor qilish</a>
+                    <a class="btn btn-danger" href="/auth/profile">Bekor qilish</a>
                     <br>
                     <a href="/auth/change-password">Parolni o'zgartirish</a>
                 </form>

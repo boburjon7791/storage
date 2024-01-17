@@ -122,7 +122,7 @@ public class AdminController {
         model.addAttribute("roles",roles);
         return "admin/employees";
     }
-    @PreAuthorize("hasRole('SUPER_MANAGER')")
+    @PreAuthorize("hasAnyRole('SUPER_MANAGER','MANAGER')")
     @PostMapping("/block")
     public String block(@RequestParam(name = "u_id") long userId,Model model){
         employeeService.block(userId);
@@ -140,7 +140,7 @@ public class AdminController {
         model.addAttribute("roles",roles);
         return "admin/employees";
     }
-    @PreAuthorize("hasRole('SUPER_MANAGER')")
+    @PreAuthorize("hasAnyRole('SUPER_MANAGER','MANAGER')")
     @PostMapping("/active")
     public String unblock(@RequestParam(name = "u_id") long userId, Model model){
         employeeService.active(userId);

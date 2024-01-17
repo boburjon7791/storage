@@ -13,14 +13,14 @@
 <script src="/js/second.js"></script>
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/auth/profile">Akkaunt</a>
+        <a class="navbar-brand" href="/">Bosh sahifa</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active"  aria-current="page" href="/">Bosh sahifa</a>
+                    <a class="nav-link active"  aria-current="page" href="/auth/profile">Akkaunt</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active"  href="/selling/save1">Savdo yaratish</a>
@@ -63,9 +63,15 @@
     <select name="page">
         <option th:each="p:${pages}" th:text="${p}" th:value="${p}"></option>
     </select>
+        <br>
     <input type="submit" class="btn btn-success" value="Olib kelish">
     </div>
 </form>
+<style>
+    th,td{
+        text-align: center;
+    }
+</style>
 <div class="card">
     <div class="card-body">
 <table class="table table-light">
@@ -88,11 +94,11 @@
 
     </script>
     <tr th:each="p:${prods}">
-                <td><img style="height: 100px" th:src="@{'/image/get/'+${p.image}}" th:alt="${p.name}"></td>
-        <td th:text="${p.name}"><h3></h3></td>
-        <td th:text="${p.price}"><h3></h3></td>
-        <td class="p_count" th:text="${p.count}"><h3></h3></td>
-        <td th:text="${p.about}"><h3></h3></td>
+        <td><h3><img style="height: 100px" th:src="@{'/image/get/'+${p.image}}" th:alt="${p.name}"></h3></td>
+        <td><h3 th:text="${p.name}"></h3></td>
+        <td><h3 th:text="${p.price}"></h3></td>
+        <td><h3 class="p_count" th:text="${p.count}"></h3></td>
+        <td><h3 th:text="${p.about}"></h3></td>
         <form action="/selling/select" method="post" onsubmit="return sell()" enctype="application/x-www-form-urlencoded">
             <input type="hidden" name="_csrf" th:value="${_csrf.token}" required>
             <td><input id="count" type="number" name="count" required class="form-control w-auto"></td>

@@ -29,7 +29,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSp
 
     @Query("""
             select e from Employee e
-            where e.firstName like concat('%', ?1, '%') or e.lastName like concat('%', ?1, '%') or e.username like concat('%', ?1, '%')""")
+            where upper(e.firstName) like upper(concat('%', ?1, '%')) or upper(e.lastName) like upper(concat('%', ?1, '%')) or upper(e.username) like upper(concat('%', ?1, '%'))""")
     Page<Employee> findAllByName(@NonNull String name, Pageable pageable);
 
     @Query("from Employee e where e.username = ?1 and e.accountNonLocked=true")
@@ -44,4 +44,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSp
     @Transactional
     @Query(value = "update Employee e set e.role=?2 where e.id=?1")
     void updateRoleById(long userId, Role targetRole);
+
+    Optional<Employee> findByIdAndAccountNonLockedTrue(Long id);
 }

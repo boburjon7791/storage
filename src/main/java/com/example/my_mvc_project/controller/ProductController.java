@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,7 +63,7 @@ public class ProductController {
     @GetMapping("/list")
     public String list(@RequestParam(required = false,defaultValue = "0")int page,Model model){
         Page<ProductGetDto> products = productService.products
-                (PageRequest.of(page, pageSize));
+                (PageRequest.of(page, pageSize, Sort.by("price").descending()));
         model.addAttribute("prods",products);
         Set<Integer> pages=new TreeSet<>();
         for (int i = 0; i < products.getTotalPages(); i++) {

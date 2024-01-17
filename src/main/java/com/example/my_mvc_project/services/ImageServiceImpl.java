@@ -1,6 +1,7 @@
 package com.example.my_mvc_project.services;
 
 import com.example.my_mvc_project.exceptions.BadParamException;
+import com.example.my_mvc_project.exceptions.NotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,11 @@ public class ImageServiceImpl implements ImageService {
     @Override
     @SneakyThrows
     public byte[] get(String name) {
-        return Files.readAllBytes(Path.of(path+"/"+name));
+        Path targetFile = Path.of(path + "/" + name);
+        if (!targetFile.toFile().exists()) {
+            throw new NotFoundException("Rasm topilmadi");
+        }
+        return Files.readAllBytes(targetFile);
     }
     @Override
     public String save(MultipartFile file) {
@@ -62,7 +67,7 @@ public class ImageServiceImpl implements ImageService {
                 throw new RuntimeException(e);
             }
             String name = FilenameUtils.getName(path1.toString());
-            cachedImages.put(name, LocalDateTime.now().plusMinutes(1));
+            cachedImages.put(name, LocalDateTime.now().plusMinutes(5));
             return name;
         } catch (IOException e) {
             throw new RuntimeException(e);

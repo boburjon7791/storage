@@ -13,14 +13,14 @@
 <!--<script src="../js/second.js"></script>-->
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/auth/profile">Akkaunt</a>
+        <a class="navbar-brand" href="/">Bosh sahifa</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Bosh sahifa</a>
+                    <a class="nav-link active" aria-current="page" href="/auth/profile">Akkaunt</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="/selling/save1">Savdo yaratish</a>
@@ -60,7 +60,6 @@
         <form action="/monthly/report/get" method="get" enctype="application/x-www-form-urlencoded">
             <div class="d-flex">
                 <div class="mr-2">
-                    <label>Yilni tanlang</label>
                     <select class="form-control w-auto" name="year" required>
                         <option th:each="y:${years}" th:text="${y}" th:value="${y}"></option>
                     </select>
@@ -78,21 +77,21 @@
         <table class="table table-light">
             <thead>
             <tr>
-                <th>Yil</th>
-                <th>Oy</th>
-                <th>Umumiy qiymati</th>
+                <th><h3>Yil</h3></th>
+                <th><h3>Oy</h3></th>
+                <th><h3>Umumiy qiymati</h3></th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="r:${reports}">
-                <td th:text="${r.year}"></td>
-                <td><a target="_blank" th:text="${r.month.name()}" th:href="@{'/daily/report/get-month/'+${r.month.value}+'/'+${r.year}}"></a></td>
-                <td th:text="${r.total}"></td>
+                <td><h3 th:text="${r.year}"></h3></td>
+                <td><h3><a target="_blank" th:text="${r.month.name()}" th:href="@{'/daily/report/get-month/'+${r.month.value}+'/'+${r.year}}"></a></h3></td>
+                <td><h3 th:text="${r.total}"></h3></td>
             </tr>
             <tr>
                 <td></td>
                 <td></td>
-                <th th:text="${total}"></th>
+                <th><h3 th:text="${total}"></h3></th>
             </tr>
             </tbody>
         </table>

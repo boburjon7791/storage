@@ -13,14 +13,14 @@
 <script src="/js/second.js"></script>
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/auth/profile">Akkaunt</a>
+        <a class="navbar-brand" href="/">Bosh sahifa</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Bosh sahifa</a>
+                    <a class="nav-link active" aria-current="page" href="/auth/profile">Akkaunt</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="/selling/save1">Savdo yaratish</a>
@@ -55,22 +55,27 @@
     </div>
 </nav>
 <br>
+<style>
+    th,td{
+        text-align: center;
+    }
+</style>
 <div class="card">
     <div class="card-body">
-        <h1> Savdo savatchasi</h1>
+        <h1>Savdo savatchasi</h1>
         <table class="table table-light">
             <thead>
              <tr>
-                 <th>Mahsulot rasmi</th>
-                 <th>Mahsulot nomi</th>
-                 <th>Miqdori</th>
-                 <th></th>
+                 <th><h3>Mahsulot rasmi</h3></th>
+                 <th><h3>Mahsulot nomi</h3></th>
+                 <th><h3>Miqdori</h3></th>
+                 <th><h3></h3></th>
              </tr>
             </thead>
             <tbody>
             <tr th:each="p:${basket.productsAndCounts}">
-                <td><a th:href="@{'/product/get/'+${p.key.id}}" target="_blank"><img style="height: 100px" th:src="@{'/image/get/'+${p.key.image}}" th:alt="${p.key.name}"></a></td>
-                <td><a th:href="@{'/product/get/'+${p.key.id}}" target="_blank" th:text="${p.key.name}"></a></td>
+                <td><h3><a th:href="@{'/product/get/'+${p.key.id}}" target="_blank"><img style="height: 100px" th:src="@{'/image/get/'+${p.key.image}}" th:alt="${p.key.name}"></a></h3></td>
+                <td><h3><a th:href="@{'/product/get/'+${p.key.id}}" target="_blank" th:text="${p.key.name}"></a></h3></td>
                 <td>
                     <form action="/selling/update-basket" method="post" enctype="application/x-www-form-urlencoded">
                       <input type="number" th:value="${p.value}" name="count" required>
@@ -91,7 +96,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <th th:text="'Umumiy narxi : '+${basket.price}"></th>
+                <th><h3 th:text="'Umumiy narxi : '+${basket.price}"></h3></th>
             </tr>
             </tbody>
         </table>

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final EmployeeService employeeService;
     @GetMapping("/save")
+    @PreAuthorize("hasAnyRole('MANAGER','SUPER_MANAGER')")
     public String save(){
         return "auth/register";
     }

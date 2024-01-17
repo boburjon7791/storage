@@ -13,14 +13,14 @@
 <!--<script src="../js/second.js"></script>-->
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/auth/profile">Akkaunt</a>
+        <a class="navbar-brand" href="/">Bosh sahifa</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active"  aria-current="page" href="/">Bosh sahifa</a>
+                    <a class="nav-link active"  aria-current="page" href="/auth/profile">Akkaunt</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active"  href="/selling/save1">Savdo yaratish</a>
@@ -55,37 +55,48 @@
     </div>
 </nav>
 <br>
+<style>
+    th,td{
+        text-align: center;
+    }
+</style>
 <div class="card">
     <div class="card-body">
-        <form action="/manager/get-total/sells-monthly">
-                <select name="year" class="form-control w-auto">
-                    <option th:each="y:${years}" th:text="${y}" th:value="${y}"></option>
-                </select>
-                <br>
-                <input type="submit" class="btn btn-success" value="Olib kelish">
-        </form>
+        <div class="card position-relative">
+        <div class="card">
+            <div class="card-body">
+                <form action="/manager/get-total/sells-monthly">
+                    <select name="year" class="form-control w-auto">
+                        <option th:each="y:${years}" th:text="${y}" th:value="${y}"></option>
+                    </select>
+                    <br>
+                    <input type="submit" class="btn btn-success" value="Olib kelish">
+                </form>
+            </div>
+        </div>
+        </div>
         <h1 th:text="${year}+'-yil uchun'"></h1>
         <table class="table table-light">
             <thead>
             <tr>
-                <th>Ismi</th>
-                <th>Familya</th>
-                <th>Oy</th>
-                <th>Summa</th>
+                <th><h3>Ismi</h3></th>
+                <th><h3>Familya</h3></th>
+                <th><h3>Oy</h3></th>
+                <th><h3>Summa</h3></th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="r: ${monthlyReport}">
-                <td><a th:href="@{'/manager/get/'+${r.employee.id}}" th:text="${r.employee.firstName}"></a></td>
-                <td><a th:href="@{'/manager/get/'+${r.employee.id}}" th:text="${r.employee.lastName}"></a></td>
-                <td th:text="${r.month.name()}"></td>
-                <td th:text="${r.totalSumma}"></td>
+                <td><h3><a th:href="@{'/manager/get/'+${r.employee.id}}" th:text="${r.employee.firstName}"></a></h3></td>
+                <td><h3><a th:href="@{'/manager/get/'+${r.employee.id}}" th:text="${r.employee.lastName}"></a></h3></td>
+                <td><h3 th:text="${r.month.name()}"></h3></td>
+                <td><h3 th:text="${r.totalSumma}"></h3></td>
             </tr>
             <tr>
                 <th></th>
                 <th></th>
                 <th></th>
-                <th th:text="'Umumiy summa : '+${totalSumma}"></th>
+                <th><h3 th:text="'Umumiy summa : '+${totalSumma}"></h3></th>
             </tr>
             </tbody>
         </table>

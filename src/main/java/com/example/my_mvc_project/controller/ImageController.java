@@ -32,7 +32,9 @@ public class ImageController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String save(@RequestParam(required = false) MultipartFile file, Model model){
         String image="none";
-        if (file!=null) {
+        if (file==null) {
+            image="none";
+        }else{
             image = imageService.save(file);
         }
         model.addAttribute("img", image);

@@ -57,6 +57,9 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public String save(MultipartFile file) {
+        if(file==null || file.isEmpty()){
+            return "none";
+	    }
         String filename = file.getOriginalFilename();
         String extension = Objects.requireNonNullElseGet(FilenameUtils.getExtension(filename),() -> {throw new BadParamException("Noto'g'ri fayl");});
         if (!extension.equals("png") && !extension.equals("jpg")) {
@@ -76,7 +79,7 @@ public class ImageServiceImpl implements ImageService {
                 throw new RuntimeException(e);
             }
             String name = FilenameUtils.getName(path1.toString());
-            cachedImages.put(name, LocalDateTime.now().plusHours(1));
+            cachedImages.put(name, LocalDateTime.now().plusMinutes(1));
             return name;
         } catch (IOException e) {
             throw new RuntimeException(e);

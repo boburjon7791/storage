@@ -49,7 +49,7 @@ public class ImageController {
     @PreAuthorize("hasAnyRole('SUPER_MANAGER','MANAGER')")
     @PostMapping("/update2")
     public String updateCommit(
-            @RequestParam MultipartFile file,
+            @RequestParam(required=false) MultipartFile file,
             @RequestParam long p_id,
             Model model
             ){

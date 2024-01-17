@@ -9,9 +9,6 @@ import com.example.my_mvc_project.exceptions.BadParamException;
 import com.example.my_mvc_project.exceptions.NotFoundException;
 import com.example.my_mvc_project.mappers.EmployeeMapper;
 import com.example.my_mvc_project.repositories.EmployeeRepository;
-import com.example.my_mvc_project.utils.JwtUtils;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.io.Encoders;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,10 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
-    @Value(value = "${secure.name}")
-    private String secureName;
+    @Value(value = "${pages.size}")
+    private Integer pageSize;
     private final EmployeeRepository employeeRepository;
-    private final JwtUtils jwtUtils;
     private final PasswordEncoder passwordEncoder;
     private final EmployeeMapper employeeMapper;
 
@@ -49,10 +44,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeMapper.toDto
                 (employeeRepository.save
                 (employee));
-    }
-    public String decode(String data){
-        byte[] decode = Decoders.BASE64.decode(data);
-        return new String(decode);
     }
     @Override
     @Transactional
@@ -86,7 +77,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (employeeRepository.updateAccountLockedFalseById(false, id)==0){
             throw new NotFoundException("Ishchi topilmadi");
         }
-        Page<EmployeeGetDto> reports = employeeRepository.findAll(PageRequest.of(0, 10))
+        Page<EmployeeGetDto> reports = employeeRepository.findAll(PageRequest.of(0, pageSize))
                 .map(employeeMapper::toDto);
         if (reports.isEmpty()) {
             throw new NotFoundException("Hisobtlar topilmadi");
@@ -169,49 +160,4 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeMapper.toDto(employeeRepository.findById(id)
                 .orElseThrow(()->new NotFoundException("Ishchi topilmadi")));
     }
-
-    /*@Override
-    public EmployeeGetDto login(String username, String password,HttpServletResponse response) {
-        Employee employee = employeeRepository.findByUsername(username)
-                .orElseThrow(() -> new BadParamException("Login yoki parol noto'g'ri"));
-
-        System.out.println("password = " + password);
-        System.out.println("employee = " + employee);
-        if (!passwordEncoder.matches(password,employee.getPassword())) {
-            throw new BadParamException("Login yoki parol noto'g'ri");
-        }
-        System.out.println("employee.getId() = " + employee.getId());
-        String userId = encode(employee.getId().toString());
-        System.out.println("userId = " + userId);
-        String encoded = jwtUtils.encode(userId);
-        Cookie cookie = new Cookie(secureName,encoded);
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(60*60);
-        response.addCookie(cookie);
-        return employeeMapper.toDto(employee);
-    }*/
-
-    private String encode(String string) {
-        return Encoders.BASE64.encode(string.getBytes());
-    }
-
-    /*@Override
-    public void logout(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            Arrays.stream(request.getCookies())
-                    .collect(Collectors.toSet()).stream()
-                    .peek(cookie -> System.out.println(cookie.getName()+": "+cookie.getValue()+" all"))
-                    .filter(cookie -> cookie.getName().equals(secureName) || cookie.getName().equals("JSESSIONID"))
-                    .peek(cookie -> System.out.println(cookie.getName()+": "+cookie.getValue()+" remove"))
-                    .forEach(cookie -> {
-                        cookie.setMaxAge(0);
-                        cookie.setPath("/");
-                        response.addCookie(cookie);
-                    });
-        }catch (Exception e){
-            throw new UnauthorizedException(e.getMessage());
-        }
-    }*/
 }

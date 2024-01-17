@@ -4,12 +4,8 @@ import com.example.my_mvc_project.dtos.product.ProductGetDto;
 import com.example.my_mvc_project.exceptions.BadParamException;
 import com.example.my_mvc_project.services.ImageService;
 import com.example.my_mvc_project.services.ProductService;
-import com.example.my_mvc_project.services.ProductServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.Banner;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +27,7 @@ public class ImageController {
     @PreAuthorize("hasAnyRole('SUPER_MANAGER','MANAGER')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String save(@RequestParam(required = false) MultipartFile file, Model model){
-        String image="none";
+        String image;
         if (file==null) {
             image="none";
         }else{

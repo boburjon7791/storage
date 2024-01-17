@@ -5,7 +5,8 @@ import com.example.my_mvc_project.dtos.reports.SellingDto;
 import com.example.my_mvc_project.entities.Basket;
 import com.example.my_mvc_project.services.ProductService;
 import com.example.my_mvc_project.services.SellingService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -20,11 +21,13 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Controller
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/selling")
 public class SellingsController {
     private final SellingService sellingService;
     private final ProductService productService;
+    @Value(value = "${pages.size}")
+    private Integer pageSize;
     @GetMapping("/get-basket")
     @PreAuthorize("hasRole('EMPLOYEE')")
     public String getBasket(Model model){
@@ -54,7 +57,7 @@ public class SellingsController {
     public String updateBasket(Model model){
         sellingService.clearBasket();
 
-        Page<ProductGetDto> products=productService.products(PageRequest.of(0,3));
+        Page<ProductGetDto> products=productService.products(PageRequest.of(0,pageSize));
         model.addAttribute("prods",products);
         int pages = products.getTotalPages();
         List<Integer> pagesList=new LinkedList<>();
@@ -92,7 +95,7 @@ public class SellingsController {
     @GetMapping("/save1")
     @PreAuthorize("hasRole('EMPLOYEE')")
     public String save1(Model model,@RequestParam(required = false,defaultValue = "0") int page){
-        Page<ProductGetDto> products=productService.products(PageRequest.of(page,3));
+        Page<ProductGetDto> products=productService.products(PageRequest.of(page,pageSize));
         model.addAttribute("prods",products);
         int pages = products.getTotalPages();
         List<Integer> pagesList=new LinkedList<>();
@@ -105,7 +108,7 @@ public class SellingsController {
     @GetMapping("/save1/by-name")
     @PreAuthorize("hasRole('EMPLOYEE')")
     public String save1(Model model,@RequestParam(required = false)String name){
-        Page<ProductGetDto> products = productService.productsByName(PageRequest.of(0, 10),name);
+        Page<ProductGetDto> products = productService.productsByName(PageRequest.of(0, pageSize),name);
         model.addAttribute("prods",products);
         int pages = products.getTotalPages();
         List<Integer> pagesList=new LinkedList<>();
@@ -120,7 +123,7 @@ public class SellingsController {
     public String save(@RequestParam long productId,@RequestParam long count,Model model){
         Basket basket = sellingService.putToBasket(productId, count);
         model.addAttribute("basket",basket);
-        Page<ProductGetDto> products=productService.products(PageRequest.of(0,3));
+        Page<ProductGetDto> products=productService.products(PageRequest.of(0,pageSize));
         model.addAttribute("prods",products);
         int pages = products.getTotalPages();
         List<Integer> pagesList=new LinkedList<>();
@@ -133,7 +136,7 @@ public class SellingsController {
     @GetMapping("/get-date/{date}")
     public String getByDate(@PathVariable LocalDate date,Model model){
         Page<SellingDto> sellings = sellingService.sellingsByDate(
-                date, PageRequest.of(0, 10, Sort.by("dateTime").descending()));
+                date, PageRequest.of(0, pageSize, Sort.by("dateTime").descending()));
         model.addAttribute("sells",sellings);
         AtomicReference<String> atomicDate= new AtomicReference<>("Kuni yozilmagan");
         sellings.stream()
@@ -155,7 +158,7 @@ public class SellingsController {
     }
     @GetMapping("/get-list")
     public String list(@RequestParam(required = false,defaultValue = "0") int page,Model model){
-        Page<SellingDto> sellings = sellingService.sellings(PageRequest.of(page, 5,Sort.by("dateTime").descending())
+        Page<SellingDto> sellings = sellingService.sellingsByDate(LocalDate.now(),PageRequest.of(page, pageSize,Sort.by("dateTime").descending())
                 .withSort(Sort.Direction.DESC,"dateTime"));
         model.addAttribute("sells",sellings);
         AtomicReference<String> date= new AtomicReference<>("Kuni yozilmagan");
@@ -183,7 +186,7 @@ public class SellingsController {
     ){
         Page<SellingDto> sellings = sellingService.
                 sellingsByDate(dateTime, PageRequest.of
-                        (page, 3, Sort.by("dateTime").descending()));
+                        (page, pageSize, Sort.by("dateTime").descending()));
         model.addAttribute("sells",sellings);
         AtomicReference<String> date= new AtomicReference<>("Kuni yozilmagan");
         sellings.stream()

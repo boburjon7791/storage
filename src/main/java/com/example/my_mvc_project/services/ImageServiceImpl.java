@@ -1,15 +1,10 @@
 package com.example.my_mvc_project.services;
 
-import com.example.my_mvc_project.entities.Product;
 import com.example.my_mvc_project.exceptions.BadParamException;
-import com.example.my_mvc_project.repositories.ProductRepository;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,16 +15,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Objects;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -42,19 +32,12 @@ public class ImageServiceImpl implements ImageService {
             System.out.println("images = " + file.mkdirs());
         }
     }
-    private final ProductRepository productRepository;
 
     @Override
     @SneakyThrows
     public byte[] get(String name) {
         return Files.readAllBytes(Path.of(path+"/"+name));
     }
-
-    @Override
-    public boolean exist(String name) {
-        return Files.exists(Path.of(path + "/" + name), LinkOption.NOFOLLOW_LINKS);
-    }
-
     @Override
     public String save(MultipartFile file) {
         if(file==null || file.isEmpty()){
@@ -98,36 +81,6 @@ public class ImageServiceImpl implements ImageService {
         graphics.drawImage(originalImage,0,0,1000,height,null);
         graphics.dispose();
         return resizedImage;
-    }
-
-    @Override
-    public void deleteUnusedImages() {
-        /*Runnable runnable=() -> {
-            // In this code errors exist. I need to correct this errors
-            Page<Product> globalProducts = productRepository.findAll(PageRequest.of(0, 10));
-            Set<String> globalImages = globalProducts.stream()
-                    .map(Product::getImage)
-                    .collect(Collectors.toSet());
-            try (Stream<Path> list = Files.list(path)) {
-                List<String> fileNames = list.map(path1 -> path1.getFileName().toString())
-                        .toList();
-                fileNames.stream()
-                        .filter(s -> !globalImages.contains(s))
-                        .peek(System.out::println)
-                        .forEach(this::delete);
-                for (int i = 1; i <= globalProducts.getTotalPages(); i++) {
-                    Set<String> images = productRepository.findAll(PageRequest.of(i, 10)).stream()
-                            .filter(product -> product.getImage() != null && product.getImage().isBlank())
-                            .map(Product::getImage)
-                            .collect(Collectors.toSet());
-                    fileNames.stream()
-                            .filter(s -> !images.contains(s))
-                            .peek(System.out::println)
-                            .forEach(this::delete);
-                }
-            } catch (Exception ignored) {}
-        };
-        runnable.run();*/
     }
 
     @Override

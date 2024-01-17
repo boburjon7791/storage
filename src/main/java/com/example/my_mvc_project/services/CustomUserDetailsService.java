@@ -1,19 +1,14 @@
 package com.example.my_mvc_project.services;
 
 import com.example.my_mvc_project.entities.Employee;
-import com.example.my_mvc_project.exceptions.ForbiddenException;
 import com.example.my_mvc_project.exceptions.NotFoundException;
-import com.example.my_mvc_project.exceptions.UnauthorizedException;
 import com.example.my_mvc_project.repositories.EmployeeRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
@@ -32,10 +27,5 @@ public class CustomUserDetailsService implements UserDetailsService {
         System.out.println("userDetails = " + userDetails);
         System.out.println("employee = " + employee);
         return userDetails;
-    }
-    public UserDetails loadUserById(Long id) throws UsernameNotFoundException {
-        Employee employee = employeeRepository.findByIdAndAccountNonLockedTrue(id)
-                .orElseThrow(() -> new UnauthorizedException("Unauthorized"));
-        return new CustomUserDetails(employee);
     }
 }

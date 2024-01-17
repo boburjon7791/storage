@@ -1,6 +1,5 @@
 package com.example.my_mvc_project.dtos.reports;
 
-import com.example.my_mvc_project.dtos.employee.EmployeeGetDto;
 import com.example.my_mvc_project.dtos.product.ProductGetDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,8 +1,10 @@
 package com.example.my_mvc_project.entities;
 
 import com.example.my_mvc_project.dtos.product.ProductGetDto;
-import com.example.my_mvc_project.exceptions.NotFoundException;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

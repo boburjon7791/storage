@@ -40,13 +40,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSp
     @Query(value = "update Employee e set e.accountNonLocked=?1 where e.id=?2")
     int updateAccountLockedFalseById(boolean accountLocked,Long id);
 
-    Optional<Employee> findByIdAndAccountNonLockedTrue(Long id);
-
     @Modifying
     @Transactional
     @Query(value = "update Employee e set e.role=?2 where e.id=?1")
     void updateRoleById(long userId, Role targetRole);
-
-    @Query("from Employee e where e.id=?1 and e.accountNonLocked=true")
-    Optional<Employee> findByIdAndTrue(long id);
 }

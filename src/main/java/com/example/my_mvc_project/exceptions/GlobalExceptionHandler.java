@@ -1,21 +1,15 @@
 package com.example.my_mvc_project.exceptions;
 
-import jakarta.validation.ConstraintDeclarationException;
-import jakarta.validation.ConstraintDefinitionException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.Banner;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-import org.thymeleaf.exceptions.TemplateInputException;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDate;

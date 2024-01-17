@@ -1,9 +1,7 @@
 package com.example.my_mvc_project;
 
-import com.example.my_mvc_project.services.EmployeeService;
 import com.example.my_mvc_project.services.ImageService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +14,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -26,16 +23,11 @@ import java.util.Map;
 @EnableScheduling
 public class MyMvcProjectApplication {
 	private final ImageService imageService;
-	private final Object object=new Object();
 
 	public static void main(String[] args) {
 		SpringApplication.run(MyMvcProjectApplication.class, args);
 	}
 
-//	@Scheduled(cron = "0 0 0 * * *")
-	public void deleteUnusedImages(){
-		imageService.deleteUnusedImages();
-	}
 	@Bean
 	public TaskExecutor taskExecutor(){
 		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();

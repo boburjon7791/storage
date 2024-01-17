@@ -3,7 +3,6 @@ package com.example.my_mvc_project.repositories;
 import com.example.my_mvc_project.entities.Selling;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -21,9 +20,6 @@ public interface SellingRepository extends JpaRepository<Selling, UUID>, JpaSpec
 
     @Query(nativeQuery = true,value = "select * from selling s where extract(localtime from s.date_time) between ?1 and?2")
     Page<Selling> findAllByBetweenTime(LocalTime startTime, LocalTime endTime, Pageable pageable);
-
-    @Query(value = "from Selling s where extract(date from s.dateTime)=?1")
-    List<Selling> findAllByDateTime(LocalDate date);
 
     @Query(value = "from Selling s where s.product.id=?1")
     Page<Selling> findAllByProduct(Long productId, Pageable pageable);

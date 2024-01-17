@@ -7,10 +7,7 @@ import com.example.my_mvc_project.dtos.reports.SoldPersonMonthly;
 import com.example.my_mvc_project.entities.Role;
 import com.example.my_mvc_project.enums.MonthCopy;
 import com.example.my_mvc_project.services.EmployeeService;
-import com.example.my_mvc_project.services.ProductService;
 import com.example.my_mvc_project.services.SellingService;
-import com.example.my_mvc_project.services.report_services.DailyReportService;
-import com.example.my_mvc_project.services.report_services.MonthlyReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -33,10 +30,7 @@ import java.util.stream.Collectors;
 @PreAuthorize("hasAnyRole('SUPER_MANAGER','MANAGER')")
 public class AdminController {
     private final EmployeeService employeeService;
-    private final ProductService productService;
     private final SellingService sellingService;
-    private final DailyReportService dailyReportService;
-    private final MonthlyReportService monthlyReportService;
     @Value(value = "${pages.size}")
     private Integer pagesSize;
 

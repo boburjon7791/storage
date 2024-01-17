@@ -24,7 +24,10 @@ import com.example.my_mvc_project.repositories.SellingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -34,7 +37,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
@@ -205,12 +207,6 @@ public class SellingServiceImpl implements SellingService {
     public Page<SellingDto> sellingsByDate(LocalDate date, Pageable pageable) {
         return getSellingDtos(sellingRepository.findAllByDate(pageable, date));
     }
-
-    @Override
-    public List<Selling> sellingsByDateList(LocalDate date) {
-        return sellingRepository.findAllByDateTime(date);
-    }
-
     @Override
     public Page<SellingDto> sellingsByProduct(Pageable pageable, Long productId) {
         return getSellingDtos(sellingRepository.findAllByProduct(productId, pageable));

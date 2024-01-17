@@ -4,9 +4,9 @@ import com.example.my_mvc_project.dtos.product.ProductCreateDto;
 import com.example.my_mvc_project.dtos.product.ProductGetDto;
 import com.example.my_mvc_project.dtos.product.ProductUpdateDto;
 import com.example.my_mvc_project.services.ProductService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,17 +14,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
 @Controller
-@AllArgsConstructor
+@RequiredArgsConstructor
 @PreAuthorize("isAuthenticated()")
 @RequestMapping("/product")
 public class ProductController {
     private final ProductService productService;
+    @Value(value = "${pages.size}")
+    private Integer pageSize;
+
     @GetMapping("/save")
     @PreAuthorize("hasAnyRole('SUPER_MANAGER','MANAGER')")
     public String save(){
@@ -61,7 +62,7 @@ public class ProductController {
     @GetMapping("/list")
     public String list(@RequestParam(required = false,defaultValue = "0")int page,Model model){
         Page<ProductGetDto> products = productService.products
-                (PageRequest.of(page, 3));
+                (PageRequest.of(page, pageSize));
         model.addAttribute("prods",products);
         Set<Integer> pages=new TreeSet<>();
         for (int i = 0; i < products.getTotalPages(); i++) {
@@ -77,7 +78,7 @@ public class ProductController {
             @RequestParam(defaultValue = "0")int page,
             @RequestParam String name,Model model
             ){
-        Page<ProductGetDto> products = productService.productsByName(PageRequest.of(page, 5), name);
+        Page<ProductGetDto> products = productService.productsByName(PageRequest.of(page, pageSize), name);
         model.addAttribute("prods",products);
         Set<Integer> pages=new TreeSet<>();
         for (int i = 0; i < products.getTotalPages(); i++) {

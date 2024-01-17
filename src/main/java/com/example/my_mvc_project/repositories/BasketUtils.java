@@ -13,7 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 @AllArgsConstructor
 public class BasketUtils {
-    private final ProductRepository productRepository;
     private final ProductService productService;
     /**
      * key is employee id, value is employee's basket

@@ -5,7 +5,6 @@ import com.example.my_mvc_project.dtos.reports.SellingDto;
 import com.example.my_mvc_project.dtos.reports.SoldPersonDaily;
 import com.example.my_mvc_project.dtos.reports.SoldPersonMonthly;
 import com.example.my_mvc_project.entities.Basket;
-import com.example.my_mvc_project.entities.Selling;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -25,7 +24,6 @@ public interface SellingService {
    void save(ReportInputDto dto);
    Page<SellingDto> sellingsByTime(LocalTime startTime, LocalTime endTime, Pageable pageable);
    Page<SellingDto> sellingsByDate(LocalDate date, Pageable pageable);
-   List<Selling> sellingsByDateList(LocalDate date);
    Page<SellingDto> sellingsByProduct(Pageable pageable,Long productId);
    Page<SellingDto> sellingsByCount(Pageable pageable,Long countStart,Long countEnd);
 

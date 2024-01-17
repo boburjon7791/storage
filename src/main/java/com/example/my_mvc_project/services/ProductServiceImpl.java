@@ -3,7 +3,6 @@ package com.example.my_mvc_project.services;
 import com.example.my_mvc_project.dtos.product.ProductCreateDto;
 import com.example.my_mvc_project.dtos.product.ProductGetDto;
 import com.example.my_mvc_project.dtos.product.ProductUpdateDto;
-import com.example.my_mvc_project.entities.Product;
 import com.example.my_mvc_project.exceptions.BadParamException;
 import com.example.my_mvc_project.exceptions.NotFoundException;
 import com.example.my_mvc_project.mappers.ProductMapper;
@@ -16,7 +15,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -53,16 +51,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductGetDto get(Long id) {
-        return productMapper.toDto(productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Mahsulot topilmadi")));
-    }
-
-    @Override
-    public ProductGetDto updateCountById(Long count, Long id) {
-        if (!productRepository.existsById(id)) {
-            throw new NotFoundException("Mahsulot topilmadi");
-        }
-        productRepository.updateCountById(count,id);
         return productMapper.toDto(productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Mahsulot topilmadi")));
     }
@@ -119,13 +107,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void exists(long productId) {
-        if (!productRepository.existsById(productId)) {
-            throw new NotFoundException("Mahsulot topilmadi");
-        }
-    }
-
-    @Override
     public int updateImage(String saved, long productId) {
         String sql= """
                     select image
@@ -141,13 +122,5 @@ public class ProductServiceImpl implements ProductService {
             imageService.delete(productImage);
         }
         return i;
-    }
-
-    @Override
-    public List<Product> getAllByIds(List<Long> ids) {
-        if (ids.size()>50) {
-            throw new BadParamException("Juda ko'p malumot so'rayapsan");
-        }
-        return productRepository.findAllById(ids);
     }
 }

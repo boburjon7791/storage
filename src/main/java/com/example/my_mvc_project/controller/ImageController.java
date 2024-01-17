@@ -53,8 +53,13 @@ public class ImageController {
             @RequestParam long p_id,
             Model model
             ){
-        String saved = imageService.save(file);
-        if (productService.updateImage(saved,p_id)>0) {
+        String filename;
+        if (file==null || file.isEmpty()) {
+            filename="none";
+        }else {
+            filename = imageService.save(file);
+        }
+        if (productService.updateImage(filename,p_id)>0) {
             ProductGetDto dto = productService.get(p_id);
             model.addAttribute("prod",dto);
             return "product/about";

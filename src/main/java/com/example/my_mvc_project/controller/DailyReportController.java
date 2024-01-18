@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.*;
@@ -50,11 +51,13 @@ public class DailyReportController {
         if (dto.isEmpty()) {
             throw new NotFoundException("Hisobotlar topilmadi");
         }
-        Double totalSumma = dto.stream()
-                .map(reportDto -> reportDto.total)
-                .reduce(Double::sum).orElse(0d);
+        BigDecimal totalSumma = dto.stream()
+                .map(reportDto -> new BigDecimal(reportDto.total))
+                .peek(System.out::println)
+                .reduce(BigDecimal::add).orElse(BigDecimal.valueOf(0));
         model.addAttribute("total",totalSumma);
         model.addAttribute("reports",dto);
+        dto.forEach(System.out::println);
     }
     @GetMapping("/get")
     public String byTwoDates(@Valid @ModelAttribute DailyReportRequestDto dto, Model model){

@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.Month;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +32,8 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
                                   group by date_time) as t2
                                   group by month, year
                 """;
+        DecimalFormat df=new DecimalFormat("#");
+        df.setMaximumFractionDigits(0);
         return checkUtil.checkMonth(namedParameterJdbcTemplate.query(
                 sql,
                 Map.of(
@@ -40,7 +44,7 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
                 (rs, rowNum) -> new MonthlyReportDto(
                         rs.getInt("year"),
                         Month.of(rs.getInt("month")),
-                        rs.getDouble("total")
+                        df.format(rs.getDouble("total"))
                 )
         ));
     }

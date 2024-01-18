@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.*;
@@ -44,9 +45,10 @@ public class MonthlyReportController {
         if (dto.isEmpty()) {
             throw new NotFoundException("Hisobotlar topilmadi");
         }
-        Double totalSumma = dto.stream()
-                .map(reportDto -> reportDto.total)
-                .reduce(Double::sum).orElse(0d);
+        BigDecimal totalSumma = dto.stream()
+                .map(reportDto -> new BigDecimal(reportDto.total))
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.valueOf(0));
         model.addAttribute("total",totalSumma);
         model.addAttribute("reports",dto);
     }

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.*;
@@ -55,9 +56,11 @@ public class AdminController {
         Set<Integer> pages=new TreeSet<>();
         model.addAttribute("pages",pages);
         model.addAttribute("dailyReport",dailyReport);
-        Double totalSumma = dailyReport.stream()
-                .map(SoldPersonDaily::getSumma)
-                .reduce(Double::sum).orElse(0D);
+        BigDecimal totalSumma = dailyReport.stream()
+                .map(soldPersonDaily -> new BigDecimal(soldPersonDaily.getSumma()))
+                .peek(System.out::println)
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.valueOf(0));
         model.addAttribute("totalSumma",totalSumma);
         date=Objects.requireNonNullElse(date,LocalDate.now());
         CustomLocalDate customLocalDate = new CustomLocalDate(
@@ -77,10 +80,10 @@ public class AdminController {
             year=LocalDate.now().getYear();
         }
         List<SoldPersonMonthly> monthlyReport = sellingService.monthlyReport(year);
-        Double totalSumma = monthlyReport.stream()
-                .map(SoldPersonMonthly::getTotalSumma)
-                .reduce(Double::sum)
-                .orElse(0D);
+        BigDecimal totalSumma = monthlyReport.stream()
+                .map(soldPersonMonthly -> new BigDecimal(soldPersonMonthly.totalSumma))
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.valueOf(0));
         model.addAttribute("totalSumma",totalSumma);
         model.addAttribute("monthlyReport",monthlyReport);
         add(model);

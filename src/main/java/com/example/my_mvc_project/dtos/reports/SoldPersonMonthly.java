@@ -5,10 +5,12 @@ import com.example.my_mvc_project.enums.MonthCopy;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.text.DecimalFormat;
+
 @Data
 @AllArgsConstructor
 public class SoldPersonMonthly{
       public EmployeeGetDto employee;
-      public Double totalSumma;
+      public String totalSumma;
       public MonthCopy month;
 }

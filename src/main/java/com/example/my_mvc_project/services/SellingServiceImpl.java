@@ -33,6 +33,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -73,10 +74,12 @@ public class SellingServiceImpl implements SellingService {
                 "date", date
         );
         map.forEach((s, o) -> System.out.println(s+" : "+o));
+        DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(0);
         List<SoldPersonDaily> soldPersonDailyList = namedParameterJdbcTemplate.query(sql, map, (rs, rowNum) -> new SoldPersonDaily(
                 employeeService.get(rs.getLong("user_id")),
-                rs.getDouble("total")
-                ));
+                df.format(rs.getDouble("total"))
+        ));
         if (soldPersonDailyList.isEmpty()) {
             throw new DailyReportNotFoundException(
                     "%s-yil %s-%s kuni hech narsa sotilmagan".formatted(
@@ -103,10 +106,11 @@ public class SellingServiceImpl implements SellingService {
         Map<String, Object> map = Map.of(
                 "year", year
         );
-
+        DecimalFormat df=new DecimalFormat("#");
+        df.setMaximumFractionDigits(0);
         List<SoldPersonMonthly> soldPersonMonthlyList = namedParameterJdbcTemplate.query(sql, map, (rs, rowNum) -> new SoldPersonMonthly(
                 employeeService.get(rs.getLong("user_id")),
-                rs.getDouble("total"),
+                df.format(rs.getDouble("total")),
                 MonthCopy.intValue(rs.getInt("month"))
         ));
         if (soldPersonMonthlyList.isEmpty()) {

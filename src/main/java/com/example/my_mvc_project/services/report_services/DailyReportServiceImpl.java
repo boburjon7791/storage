@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,8 @@ public class DailyReportServiceImpl implements DailyReportService {
                 group by date
                 order by date desc
                 """;
+        DecimalFormat df=new DecimalFormat("#");
+        df.setMaximumFractionDigits(0);
         return checkUtil.checkDay(namedParameterJdbcTemplate.query(
                 sql, Map.of(
                         "month",dto.month(),
@@ -37,7 +40,8 @@ public class DailyReportServiceImpl implements DailyReportService {
                     LocalDateTime localDateTime = rs.getTimestamp("date").toLocalDateTime();
                     return new DailyReportDto(
                             localDateTime,
-                            rs.getDouble("total"), MonthCopy.intValue(localDateTime.getMonthValue())
+                            df.format(rs.getDouble("total")),
+                            MonthCopy.intValue(localDateTime.getMonthValue())
                     );
                 }
         ));

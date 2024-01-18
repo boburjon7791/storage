@@ -2,12 +2,14 @@ package com.example.my_mvc_project.repositories;
 
 import com.example.my_mvc_project.dtos.product.ProductGetDto;
 import com.example.my_mvc_project.entities.Basket;
+import com.example.my_mvc_project.exceptions.BadParamException;
 import com.example.my_mvc_project.exceptions.NotFoundException;
 import com.example.my_mvc_project.services.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -28,6 +30,9 @@ public class BasketUtils {
     }
     public Basket putProductToBasket(Long employeeId,Long productId,Long count){
         synchronized (object){
+            if (count<1) {
+                throw new BadParamException("Savatchaga 1 dan kichik miqdorni kiritish mumkin emas");
+            }
             Basket basket;
             ProductGetDto product = productService.get(productId);
             if (baskets.containsKey(employeeId)) {
@@ -39,7 +44,10 @@ public class BasketUtils {
             if (productCount <count) {
                 throw new NotFoundException("Ushbu mahsulotdan faqatgina %s ta qoldi".formatted(productCount));
             }
-            basket.productsAndCounts.put(product,count);
+            Optional<ProductGetDto> optional = basket.productsAndCounts.keySet().stream()
+                    .filter(productGetDto -> productGetDto.getId().equals(productId))
+                    .findFirst();
+            basket.productsAndCounts.put(optional.orElse(product),count);
             basket.setProductsAndCounts(basket.productsAndCounts);
             baskets.put(employeeId,basket);
             return baskets.get(employeeId);

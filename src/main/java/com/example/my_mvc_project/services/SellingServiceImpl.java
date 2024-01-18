@@ -191,11 +191,14 @@ public class SellingServiceImpl implements SellingService {
                 .employee(employee)
                 .product(product)
                 .build();
-        Selling saved= sellingRepository.save(selling);
-        if (product.getCount()<saved.getCount() || productRepository
-                .subtractCountById(saved.getCount(),saved.getProduct().getId())<1) {
+        if (product.getCount()<selling.getCount()) {
+            throw new NotFoundException("%s ushbu mahsulotdan %s ta qoldi".formatted(product.getName(),product.getCount()));
+        }
+        if (productRepository
+                .subtractCountById(selling.getCount(),selling.getProduct().getId())<1) {
             throw new BadParamException("Xatolik yuz berdi");
         }
+        sellingRepository.save(selling);
     }
 
     @Override

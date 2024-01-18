@@ -5,6 +5,7 @@ import com.example.my_mvc_project.dtos.reports.SellingDto;
 import com.example.my_mvc_project.entities.Basket;
 import com.example.my_mvc_project.services.ProductService;
 import com.example.my_mvc_project.services.SellingService;
+import com.example.my_mvc_project.utils.BaseUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,6 +30,7 @@ public class SellingsController {
     private final ProductService productService;
     @Value(value = "${pages.size}")
     private Integer pageSize;
+    private final BaseUtils baseUtils;
     @GetMapping("/get-basket")
     @PreAuthorize("hasRole('EMPLOYEE')")
     public String getBasket(Model model){
@@ -56,7 +59,6 @@ public class SellingsController {
     @PreAuthorize("hasRole('EMPLOYEE')")
     public String updateBasket(Model model){
         sellingService.clearBasket();
-
         Page<ProductGetDto> products=productService.products(PageRequest.of(0,pageSize));
         model.addAttribute("prods",products);
         int pages = products.getTotalPages();

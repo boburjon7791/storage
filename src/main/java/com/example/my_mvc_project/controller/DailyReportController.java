@@ -5,6 +5,7 @@ import com.example.my_mvc_project.dtos.reports.DailyReportRequestDto;
 import com.example.my_mvc_project.enums.MonthCopy;
 import com.example.my_mvc_project.exceptions.NotFoundException;
 import com.example.my_mvc_project.services.report_services.DailyReportService;
+import com.example.my_mvc_project.utils.BaseUtils;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 @PreAuthorize("hasAnyRole('SUPER_MANAGER','MANAGER')")
 public class DailyReportController {
     private final DailyReportService dailyReportService;
+    private final BaseUtils baseUtils;
 
     @GetMapping
     public String get1(Model model){
@@ -36,6 +38,11 @@ public class DailyReportController {
         return "reports/daily";
     }
     private void add(Model model,List<DailyReportDto> dto){
+        BigDecimal totalSumma = dto.stream()
+                .map(reportDto -> new BigDecimal(reportDto.total))
+                .reduce(BigDecimal::add).orElse(BigDecimal.valueOf(0));
+            dto.forEach(dailyReportDto ->
+                    dailyReportDto.setTotal(baseUtils.setPointToNumber(dailyReportDto.total)));
         model.addAttribute("months", MonthCopy.values());
         List<LocalDate> localDates=new LinkedList<>();
         LocalDate start = LocalDate.of(Year.now().minusYears(10).getValue(), 1, 1);
@@ -51,11 +58,7 @@ public class DailyReportController {
         if (dto.isEmpty()) {
             throw new NotFoundException("Hisobotlar topilmadi");
         }
-        BigDecimal totalSumma = dto.stream()
-                .map(reportDto -> new BigDecimal(reportDto.total))
-                .peek(System.out::println)
-                .reduce(BigDecimal::add).orElse(BigDecimal.valueOf(0));
-        model.addAttribute("total",totalSumma);
+        model.addAttribute("total",baseUtils.setPointToNumber(totalSumma.toString()));
         model.addAttribute("reports",dto);
         dto.forEach(System.out::println);
     }

@@ -21,6 +21,7 @@ import com.example.my_mvc_project.repositories.BasketUtils;
 import com.example.my_mvc_project.repositories.EmployeeRepository;
 import com.example.my_mvc_project.repositories.ProductRepository;
 import com.example.my_mvc_project.repositories.SellingRepository;
+import com.example.my_mvc_project.utils.BaseUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,6 +57,7 @@ public class SellingServiceImpl implements SellingService {
     private final EmployeeService employeeService;
     @Value(value = "${pages.size}")
     private Integer pagesSize;
+    private final BaseUtils baseUtils;
 
     @Override
     public List<SoldPersonDaily> dailyReport(LocalDate date) {
@@ -249,7 +251,7 @@ public class SellingServiceImpl implements SellingService {
             SellingDto dto = sellingMapper.toDto(sell);
             DecimalFormat df=new DecimalFormat("#");
             df.setMaximumFractionDigits(0);
-            dto.setSoldPrice2(df.format(sell.getSoldPrice()));
+            dto.setSoldPrice2(baseUtils.setPointToNumber(df.format(sell.getSoldPrice())));
             dto.setProduct(productMapper.toDto(sell.getProduct()));
             EmployeeGetDto getDto = employeeMapper.toDto(sell.getEmployee());
             dto.setFirstNameOfEmployee(getDto.getFirstName());

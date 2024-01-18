@@ -8,6 +8,7 @@ import com.example.my_mvc_project.entities.Role;
 import com.example.my_mvc_project.enums.MonthCopy;
 import com.example.my_mvc_project.services.EmployeeService;
 import com.example.my_mvc_project.services.SellingService;
+import com.example.my_mvc_project.utils.BaseUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -34,6 +35,7 @@ public class AdminController {
     private final SellingService sellingService;
     @Value(value = "${pages.size}")
     private Integer pagesSize;
+    private final BaseUtils baseUtils;
 
     public void add(Model model){
         model.addAttribute("months", MonthCopy.values());
@@ -53,15 +55,17 @@ public class AdminController {
     @GetMapping("/get-total/sells-daily")
     public String getTotalDaily(Model model, @RequestParam(required = false) LocalDate date){
         List<SoldPersonDaily> dailyReport = sellingService.dailyReport(Objects.requireNonNullElse(date,LocalDate.now()));
-        Set<Integer> pages=new TreeSet<>();
-        model.addAttribute("pages",pages);
-        model.addAttribute("dailyReport",dailyReport);
         BigDecimal totalSumma = dailyReport.stream()
                 .map(soldPersonDaily -> new BigDecimal(soldPersonDaily.getSumma()))
                 .peek(System.out::println)
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.valueOf(0));
-        model.addAttribute("totalSumma",totalSumma);
+        Set<Integer> pages=new TreeSet<>();
+        dailyReport.forEach(soldPersonDaily ->
+                soldPersonDaily.setSumma(baseUtils.setPointToNumber(soldPersonDaily.summa)));
+        model.addAttribute("pages",pages);
+        model.addAttribute("dailyReport",dailyReport);
+        model.addAttribute("totalSumma",baseUtils.setPointToNumber(totalSumma.toString()));
         date=Objects.requireNonNullElse(date,LocalDate.now());
         CustomLocalDate customLocalDate = new CustomLocalDate(
                 date.getYear(),
@@ -84,7 +88,9 @@ public class AdminController {
                 .map(soldPersonMonthly -> new BigDecimal(soldPersonMonthly.totalSumma))
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.valueOf(0));
-        model.addAttribute("totalSumma",totalSumma);
+        model.addAttribute("totalSumma",baseUtils.setPointToNumber(totalSumma.toString()));
+        monthlyReport.forEach(soldPersonMonthly ->
+                soldPersonMonthly.setTotalSumma(baseUtils.setPointToNumber(soldPersonMonthly.totalSumma)));
         model.addAttribute("monthlyReport",monthlyReport);
         add(model);
         model.addAttribute("year",year);

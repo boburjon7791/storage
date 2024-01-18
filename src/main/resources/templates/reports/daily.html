@@ -92,9 +92,9 @@
             </thead>
             <tbody>
             <tr th:each="r:${reports}">
-                <td><h3><a target="_blank" th:text="${r.date.year}" th:href="@{'/monthly/report/get-year/'+${r.date.year}}"></a></h3></td>
+                <td><h3><a th:text="${r.date.year}" th:href="@{'/monthly/report/get-year/'+${r.date.year}}"></a></h3></td>
                 <td><h3 th:text="${r.month.name()}"></h3></td>
-                <td><h3><a target="_blank" th:text="${r.date.dayOfMonth}" th:href="@{'/selling/get-date/'+${r.date.toLocalDate()}}"></a></h3></td>
+                <td><h3><a th:text="${r.date.dayOfMonth}" th:href="@{'/selling/get-date/'+${r.date.toLocalDate()}}"></a></h3></td>
                 <td><h3 th:text="${r.total}"></h3></td>
             </tr>
             <tr>

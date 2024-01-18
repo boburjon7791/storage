@@ -74,8 +74,8 @@
             </thead>
             <tbody>
             <tr th:each="p:${basket.productsAndCounts}">
-                <td><h3><a th:href="@{'/product/get/'+${p.key.id}}" target="_blank"><img style="height: 100px" th:src="@{'/image/get/'+${p.key.image}}" th:alt="${p.key.name}"></a></h3></td>
-                <td><h3><a th:href="@{'/product/get/'+${p.key.id}}" target="_blank" th:text="${p.key.name}"></a></h3></td>
+                <td><h3><a th:href="@{'/product/get/'+${p.key.id}}"><img style="height: 100px" th:src="@{'/image/get/'+${p.key.image}}" th:alt="${p.key.name}"></a></h3></td>
+                <td><h3><a th:href="@{'/product/get/'+${p.key.id}}" th:text="${p.key.name}"></a></h3></td>
                 <td>
                     <form action="/selling/update-basket" method="post" enctype="application/x-www-form-urlencoded">
                       <input type="number" th:value="${p.value}" name="count" required>

@@ -85,7 +85,7 @@
             <tbody>
             <tr th:each="r:${reports}">
                 <td><h3 th:text="${r.year}"></h3></td>
-                <td><h3><a target="_blank" th:text="${r.month.name()}" th:href="@{'/daily/report/get-month/'+${r.month.value}+'/'+${r.year}}"></a></h3></td>
+                <td><h3><a th:text="${r.month.name()}" th:href="@{'/daily/report/get-month/'+${r.month.value}+'/'+${r.year}}"></a></h3></td>
                 <td><h3 th:text="${r.total}"></h3></td>
             </tr>
             <tr>

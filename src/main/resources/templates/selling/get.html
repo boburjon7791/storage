@@ -96,7 +96,7 @@
                 <td><h3><a th:href="@{'/product/get/'+${s.product.id}}" th:text="${s.product.name}"></a></h3></td>
                 <td><h3><a th:href="@{'/product/get/'+${s.product.id}}"><img style="height: 100px" th:src="@{'/image/get/'+${s.product.image}}" th:alt="${s.product.name}"></a></h3></td>
                 <td><h3 th:text="${s.count}"></h3></td>
-                <td><h3 th:text="${s.soldPrice}"></h3></td>
+                <td><h3 th:text="${s.soldPrice2}"></h3></td>
                 <td><h3 th:text="${s.dateTime.hour}+' : '+${s.dateTime.minute}"></h3></td>
                 <td><h3 th:text="${s.firstNameOfEmployee}+' '+${s.lastNameOfEmployee}"></h3></td>
             </tr>

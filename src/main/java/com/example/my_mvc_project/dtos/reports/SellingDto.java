@@ -15,7 +15,8 @@ public class SellingDto {
        private UUID id;
        private ProductGetDto product;
        private Long count;
-       private String soldPrice;
+       private Double soldPrice;
+       private String soldPrice2;
        private LocalDateTime dateTime;
        private String firstNameOfEmployee;
        private String lastNameOfEmployee;

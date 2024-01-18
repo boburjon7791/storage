@@ -247,6 +247,9 @@ public class SellingServiceImpl implements SellingService {
                 throw new NotFoundException("Ishchi topilmadi");
             }
             SellingDto dto = sellingMapper.toDto(sell);
+            DecimalFormat df=new DecimalFormat("#");
+            df.setMaximumFractionDigits(0);
+            dto.setSoldPrice2(df.format(sell.getSoldPrice()));
             dto.setProduct(productMapper.toDto(sell.getProduct()));
             EmployeeGetDto getDto = employeeMapper.toDto(sell.getEmployee());
             dto.setFirstNameOfEmployee(getDto.getFirstName());

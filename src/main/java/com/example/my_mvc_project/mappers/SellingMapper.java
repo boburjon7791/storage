@@ -12,5 +12,6 @@ public interface SellingMapper {
     @Mapping(target = "product",ignore = true)
     @Mapping(target = "firstNameOfEmployee",ignore = true)
     @Mapping(target = "lastNameOfEmployee",ignore = true)
+    @Mapping(target = "soldPrice2",ignore = true)
     SellingDto toDto(Selling selling);
 }

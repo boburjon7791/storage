@@ -8,8 +8,10 @@ import com.example.my_mvc_project.services.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -56,7 +58,11 @@ public class BasketUtils {
     public Basket removeProductByEmployeeId(Long employeeId,Long productId){
         synchronized (object){
             Basket basket = get(employeeId);
-            basket.productsAndCounts.remove(productService.get(productId));
+            basket.productsAndCounts
+                    .entrySet()
+                    .removeIf(productGetDtoLongEntry ->
+                            productGetDtoLongEntry
+                                    .getKey().getId().equals(productId));
             return baskets.get(employeeId);
         }
     }

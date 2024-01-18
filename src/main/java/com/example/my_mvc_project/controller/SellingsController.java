@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -30,7 +30,6 @@ public class SellingsController {
     private final ProductService productService;
     @Value(value = "${pages.size}")
     private Integer pageSize;
-    private final BaseUtils baseUtils;
     @GetMapping("/get-basket")
     @PreAuthorize("hasRole('EMPLOYEE')")
     public String getBasket(Model model){

@@ -140,6 +140,9 @@ public class SellingServiceImpl implements SellingService {
         AtomicReference<Double> totalSumma=new AtomicReference<>(0d);
         basket.productsAndCounts.forEach((product, count) -> totalSumma.getAndUpdate(aDouble -> aDouble+product.getPrice()*count));
         basket.setPrice(totalSumma.get());
+        DecimalFormat df=new DecimalFormat("#");
+        df.setMaximumFractionDigits(0);
+        basket.setPriceTotal(baseUtils.setPointToNumber(df.format(basket.getPrice())));
         return basket;
     }
 

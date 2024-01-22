@@ -1,10 +1,7 @@
 package com.example.my_mvc_project.entities;
 
 import com.example.my_mvc_project.dtos.product.ProductGetDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Builder
 @NoArgsConstructor
 @Getter
+@Setter
 public class Basket {
     /**
      * key is product id, value is count
@@ -21,6 +19,8 @@ public class Basket {
 
     @Builder.Default
     private Double price=0d;
+
+    private String priceTotal;
 
     private final Object object=new Object();
 

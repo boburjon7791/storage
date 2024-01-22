@@ -130,13 +130,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void updateRole(long userId, String role) {
-        try {
+            CustomUserDetails customUserDetails=(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (customUserDetails.employee.getId().equals(userId)) {
+                throw new ForbiddenException("Siz o'zingizni rolingizni o'zgartira olmaysiz");
+            }
             Role targetRole = Role.valueOf(role);
             employeeRepository.updateRoleById(userId,targetRole);
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new BadParamException(e.getMessage());
-        }
     }
 
     @Override

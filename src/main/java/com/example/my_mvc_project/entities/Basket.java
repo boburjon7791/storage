@@ -15,6 +15,7 @@ public class Basket {
     /**
      * key is product id, value is count
      * */
+    @Builder.Default
     public Map<ProductGetDto,Long> productsAndCounts=new ConcurrentHashMap<>();
 
     @Builder.Default

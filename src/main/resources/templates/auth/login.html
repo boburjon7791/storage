@@ -1,42 +1,35 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login Page</title>
+    <title>Login</title>
     <link rel="stylesheet" href="/css/bootstrap.css">
 <!--    <link rel="stylesheet" href="../css/bootstrap.css">-->
 </head>
 <body>
-<!--<script src="../js/first.js"></script>-->
-<script src="/js/first.js"></script>
-<!--<script src="../js/second.js"></script>-->
-<script src="/js/second.js"></script>
-<script>
-    function save() {
-        var password=document.getElementById('formGroupExampleInput4')
-        password.value=btoa(password.value)
-        password.value=btoa(password.value)
-        password.value=btoa(password.value)
-        return true;
-    }
-</script>
 <style>
     .card,.form-control{
         border-color: #198754; /* Rangni o'zgartiring */
     }
 </style>
-<form onsubmit="return save()" method="post" action="/auth/login" enctype="application/x-www-form-urlencoded">
+<script src="/js/first.js"></script>
+<script src="/js/second.js"></script>
+<form method="POST" enctype="application/x-www-form-urlencoded">
     <div class="position-absolute top-50 start-50 translate-middle">
         <div class="card">
             <div class="card-body">
                 <h1 style="color: #198754">Tizimga kirish</h1>
+                <br>
                 <label>
                     <input type="hidden" id="_csrf" name="_csrf" th:value="${_csrf.token}" required>
                     <input type="text" id="formGroupExampleInput3" name="uname" class="form-control" placeholder="Loginingizni kiriting" required>
                     <br>
-                    <input type="password" class="form-control" id="formGroupExampleInput4" name="pwd" placeholder="Parolingizni kiriting" required>
+                    <input type="password" id="formGroupExampleInput4" name="pswd" class="form-control" placeholder="Parolingizni kiriting" required>
+                    <!--<br>
+                    <input type="checkbox" name="rem">
+                    <a>Saqlash</a>-->
                     <br>
-                    <input type="submit" class="btn btn-outline-success" value="Kirish" required>
+                    <input type="submit" class="btn btn-success" value="Kirish" required>
                 </label>
             </div>
         </div>

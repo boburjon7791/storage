@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+>
 <head>
     <meta charset="UTF-8">
     <title>Product About</title>
@@ -23,24 +26,24 @@
                     <a class="nav-link active"  aria-current="page" href="/auth/profile">Akkaunt</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active"  href="/selling/save1">Savdo yaratish</a>
+                    <a class="nav-link active" sec:authorize="hasAnyRole('EMPLOYEE')" href="/selling/save1">Savdo yaratish</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active"  href="/selling/get-list">Savdolarni ko'rish</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasAnyRole('SUPER_MANAGER','MANAGER')">
                     <a class="nav-link active"  href="/product/save">Mahsulot yaratish</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active"  href="/product/list">Mahsulotlarni ko'rish</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasAnyRole('SUPER_MANAGER','MANAGER')">
                     <a class="nav-link active" href="/daily/report">Kunlik hisobotlarni ko'rish</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="/manager/get-total/sells-daily">Kunlik kassani ko'rish</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasAnyRole('SUPER_MANAGER','MANAGER')">
                     <a class="nav-link active" href="/monthly/report">Oylik hisobotlarni ko'rish</a>
                 </li>
                 <li class="nav-item">
@@ -85,7 +88,7 @@
 <div class="d-flex flex-row">
     <div class="card">
         <div class="card-body">
-            <form action="/product/update" method="post" enctype="application/x-www-form-urlencoded">
+            <form action="/product/update" method="post" enctype="application/x-www-form-urlencoded" sec:authorize="hasAnyRole('SUPER_MANAGER','MANAGER')">
             <h1 style="color: #198754">Mahsulot haqida</h1>
             <label>
                 <input type="hidden" name="_csrf" th:value="${_csrf.token}" required>
@@ -106,9 +109,15 @@
                 <a onclick="return confirm('Rostan ham bekor qilmoqchimisiz?')" class="btn btn-danger" th:href="@{'/product/about?id='+${prod.id}}">Bekor qilish</a>
             </label>
             </form>
+            <div sec:authorize="hasAnyRole('EMPLOYEE')">
+                <h4 th:text="'Nomi    : '+${prod.name}"></h4>
+                <h4 th:text="'Miqdori : '+${prod.count}"></h4>
+                <h4 th:text="'Miqdori : '+${prod.price}"></h4>
+                <h4 th:text="'Haqida  : '+${prod.about}"></h4>
+            </div>
         </div>
     </div>
-<form onsubmit="return check()" action="/product/update" method="post" enctype="application/x-www-form-urlencoded">
+<form sec:authorize="hasAnyRole('SUPER_MANAGER','MANAGER')" onsubmit="return check()" action="/product/update" method="post" enctype="application/x-www-form-urlencoded">
 </form>
 <div class="card">
     <div class="card-body">

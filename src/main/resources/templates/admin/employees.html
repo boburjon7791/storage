@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+>
 <head>
     <meta charset="UTF-8">
     <title>Ishchilar</title>
@@ -22,35 +25,35 @@
                 <li class="nav-item">
                     <a class="nav-link active"  aria-current="page" href="/auth/profile">Akkaunt</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasAnyRole('EMPLOYEE')">
                     <a class="nav-link active"  href="/selling/save1">Savdo yaratish</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active"  href="/selling/get-list">Savdolarni ko'rish</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasAnyRole('SUPER_MANAGER','MANAGER')">
                     <a class="nav-link active"  href="/product/save">Mahsulot yaratish</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active"  href="/product/list">Mahsulotlarni ko'rish</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasAnyRole('SUPER_MANAGER','MANAGER')">
                     <a class="nav-link active" href="/daily/report">Kunlik hisobotlarni ko'rish</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="/manager/get-total/sells-daily">Kunlik kassani ko'rish</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasAnyRole('SUPER_MANAGER','MANAGER')">
                     <a class="nav-link active" href="/monthly/report">Oylik hisobotlarni ko'rish</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="/manager/get-total/sells-monthly">Oylik kassani ko'rish</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasAnyRole('SUPER_MANAGER','MANAGER')">
                     <a class="nav-link active" href="/auth/save">Yangi ishchi qo'shish</a>
                 </li>
             </ul>
-            <form class="d-flex" action="/manager/search" role="search">
+            <form class="d-flex" action="/manager/search" role="search" sec:authorize="hasAnyRole('SUPER_MANAGER','MANAGER')">
                 <input class="form-control me-2" type="search" name="name" required placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Qidirish</button>
             </form>
@@ -89,8 +92,8 @@
                 <td><h3 th:text="${e.lastName}"></h3></td>
                 <td><h3 th:text="${e.username}"></h3></td>
                 <td>
-                    <form action="/manager/update/role" method="post" enctype="application/x-www-form-urlencoded">
-                        <h3 th:text="'Joriy roli : '+${e.role.name()}"></h3>
+                    <h3 th:text="'Joriy roli : '+${e.role.name()}"></h3>
+                    <form action="/manager/update/role" method="post" enctype="application/x-www-form-urlencoded" sec:authorize="hasAnyRole('SUPER_MANAGER')">
                         <select class="form-control w-auto" name="role">
                             <option class="form-control w-auto" th:each="r:${roles}" th:text="${r.name()}" th:value="${r.name()}"></option>
                         </select>

@@ -63,7 +63,7 @@
 <br>
 <form action="/selling/save1" method="get" enctype="application/x-www-form-urlencoded">
     <div class="form-control w-auto"><h3 th:text="'Joriy sahifa '+${prods.number}"></h3>
-    <select name="page">
+    <select name="page" class="form-control w-auto">
         <option th:each="p:${pages}" th:text="${p}" th:value="${p}"></option>
     </select>
         <br>

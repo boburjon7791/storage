@@ -1,1 +1,0 @@
-java -jar my_mvc_project-0.0.1-SNAPSHOT.jar

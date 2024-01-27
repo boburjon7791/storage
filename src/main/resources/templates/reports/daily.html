@@ -25,10 +25,10 @@
                 <li class="nav-item">
                     <a class="nav-link active"  aria-current="page" href="/auth/profile">Akkaunt</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasAnyRole('EMPLOYEE')">
                     <a class="nav-link active"  href="/selling/save1">Savdo yaratish</a>
                 </li>
-                <li class="nav-item" sec:authorize="hasAnyRole('EMPLOYEE')">
+                <li class="nav-item">
                     <a class="nav-link active"  href="/selling/get-list">Savdolarni ko'rish</a>
                 </li>
                 <li class="nav-item">

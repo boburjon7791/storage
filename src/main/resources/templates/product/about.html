@@ -110,10 +110,30 @@
             </label>
             </form>
             <div sec:authorize="hasAnyRole('EMPLOYEE')">
-                <h4 th:text="'Nomi    : '+${prod.name}"></h4>
-                <h4 th:text="'Miqdori : '+${prod.count}"></h4>
-                <h4 th:text="'Miqdori : '+${prod.price}"></h4>
-                <h4 th:text="'Haqida  : '+${prod.about}"></h4>
+                <table class="table table-bordered">
+                    <tbody>
+                       <tr>
+                           <th><h4>Nomi</h4></th>
+                           <td><h4 th:text="${prod.name}"></h4></td>
+                       </tr>
+                       <tr>
+                           <th><h4>Narxi</h4></th>
+                           <td><h4 th:text="${prod.price}"></h4></td>
+                       </tr>
+                       <tr>
+                           <th><h4>Miqdori</h4></th>
+                           <td><h4 th:text="${prod.count}"></h4></td>
+                       </tr>
+                       <tr>
+                           <th><h4>Haqida</h4></th>
+                           <td><h4 th:text="${prod.about}"></h4></td>
+                       </tr>
+                    </tbody>
+                </table>
+<!--                <h4 th:text="'Nomi    : '+${prod.name}"></h4>-->
+<!--                <h4 th:text="'Miqdori : '+${prod.count}"></h4>-->
+<!--                <h4 th:text="'Narxi : '+${prod.price}"></h4>-->
+<!--                <h4 th:text="'Haqida  : '+${prod.about}"></h4>-->
             </div>
         </div>
     </div>

@@ -30,7 +30,7 @@ public class AuthController {
         EmployeeGetDto saved = employeeService.save(dto);
         model.addAttribute("emp",saved);
         try {
-            response.sendRedirect("/login");
+            response.sendRedirect("/manager/get/%s".formatted(saved.getId()));
         }catch (Exception e){
             e.printStackTrace();
         }

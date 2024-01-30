@@ -64,11 +64,12 @@ public class SecurityConfiguration {
                             configurer1.loginPage("/auth/login");
                             configurer1.successForwardUrl("/");
                             configurer1.successHandler(authenticationSuccessHandler());
-//                            configurer1.failureHandler(authenticationFailureHandler());
+                            configurer1.failureHandler(authenticationFailureHandler());
+                            configurer1.failureUrl("/auth/login");
                         }
                 ).exceptionHandling(configurer -> configurer.authenticationEntryPoint(
                         (request, response, authException) -> {
-                            addIpAddressToList(request.getRemoteAddr());
+                            addIpAddressToList(request.getSession().getId());
                             response.sendRedirect("auth/login");
                         }))
                 .logout(configurer2 -> {
@@ -88,8 +89,8 @@ public class SecurityConfiguration {
             protected void doFilterInternal(@NonNull HttpServletRequest request,
                                             @NonNull HttpServletResponse response,
                                             @NonNull FilterChain filterChain) throws ServletException, IOException {
-                if (ipAddresses.containsKey(request.getRemoteAddr()) && ipAddresses.get(request.getRemoteAddr())>=3) {
-                    System.out.println("request.getRemoteAddr() = " + request.getRemoteAddr());
+                if (ipAddresses.containsKey(request.getSession().getId()) && ipAddresses.get(request.getSession().getId())>=3) {
+                    System.out.println("request.getSession().getId() = " + request.getSession().getId());
                     response.getWriter().println("Xatolik bo'ldi. Keyinroq urinib ko'ring");
                     return;
                 }
@@ -100,16 +101,16 @@ public class SecurityConfiguration {
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler(){
         return (request, response, authentication) ->{
-            removeIpAddressFromList(request.getRemoteAddr());
+            removeIpAddressFromList(request.getSession().getId());
             response.sendRedirect("/");
         };
     }
     public void removeIpAddressFromList(String ipAddress){
-        System.out.println("request.getRemoteAddr() = " + ipAddress);
+        System.out.println("request.getSession().getId() = " + ipAddress);
         ipAddresses.remove(ipAddress);
     }
     public void addIpAddressToList(String ipAddress){
-        System.out.println("request.getRemoteAddr() = " + ipAddress);
+        System.out.println("request.getSession().getId() = " + ipAddress);
         if (ipAddresses.containsKey(ipAddress)) {
             synchronized (new Object()){
                 ipAddresses.put(ipAddress,ipAddresses.get(ipAddress)+1);
@@ -120,7 +121,14 @@ public class SecurityConfiguration {
     }
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler(){
-        return (request, response, exception) ->
-                addIpAddressToList(request.getRemoteAddr());
+        return (request, response, exception) ->{
+            if (ipAddresses.containsKey(request.getSession().getId()) && ipAddresses.get(request.getSession().getId())>=3) {
+                response.getWriter().println("Xatolik sodir bo'ldi. Keyinroq urinib ko'ring");
+                return;
+            }
+            System.out.println("request.getSession().getId() = " + request.getSession().getId());
+            addIpAddressToList(request.getSession().getId());
+            response.sendRedirect("/");
+        };
     }
 }

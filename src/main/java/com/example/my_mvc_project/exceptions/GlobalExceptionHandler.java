@@ -5,7 +5,6 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.Banner;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -105,6 +104,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({AuthenticationException.class, UnauthorizedException.class})
     public ModelAndView handlerException(RuntimeException e){
+        log.warn(e.getMessage());
         return new ModelAndView("auth/login");
     }
 

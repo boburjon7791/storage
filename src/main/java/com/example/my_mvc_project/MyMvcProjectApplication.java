@@ -1,5 +1,6 @@
 package com.example.my_mvc_project;
 
+import com.example.my_mvc_project.configurations.SecurityConfiguration;
 import com.example.my_mvc_project.services.ImageService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +55,10 @@ public class MyMvcProjectApplication {
 				System.out.println(entry.getKey()+" was deleted");
 			}
 		}
+	}
+	@Scheduled(cron = "0 * * * * *")
+	public void deleteIpAddresses(){
+		SecurityConfiguration.ipAddresses.clear();
 	}
 
 //	@Bean

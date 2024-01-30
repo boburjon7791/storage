@@ -5,7 +5,9 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.Banner;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -65,6 +67,11 @@ public class GlobalExceptionHandler {
         ModelAndView modelAndView = new ModelAndView("error_pages/bad_request");
         modelAndView.addObject("value",sb.toString());
         return modelAndView;
+    }
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    public ModelAndView handler(InternalAuthenticationServiceException e){
+        log.warn(e.getMessage());
+        return new ModelAndView("auth/login");
     }
 
     @ExceptionHandler(DailyReportNotFoundException.class)

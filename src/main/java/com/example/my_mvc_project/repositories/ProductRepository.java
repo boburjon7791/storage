@@ -16,6 +16,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
 
     @Query(value = "from Product p where upper(p.name) like upper(concat('%',?1,'%')) ")
     Page<Product> findAllByNameContainingIgnoreCase(String name, Pageable pageable);
+    @Query(value = "from Product p where p.id=?1")
+    Page<Product> findAllById(long id, Pageable pageable);
 
     @Query(value = "from Product p where ?1 = p.about")
     Page<Product> findAllByAbout(String about,Pageable pageable);

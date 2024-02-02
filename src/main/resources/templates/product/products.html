@@ -82,6 +82,7 @@
             <thead>
             <tr>
                 <th><h3>Rasmi</h3></th>
+                <th><h3>Id raqami</h3></th>
                 <th><h3>Mahsulot nomi</h3></th>
                 <th><h3>Miqdori</h3></th>
                 <th><h3>Narxi</h3></th>
@@ -91,6 +92,7 @@
             <tbody>
             <tr th:each="p:${prods}">
                 <td><h3><a th:href="@{'/product/get/'+${p.id}}"><img style="height: 100px" th:src="@{'/image/get/'+${p.image}}" th:alt="${p.name}"></a></h3></td>
+                <td><h3><a th:href="@{'/product/get/'+${p.id}}" th:text="${p.id}"></a></h3></td>
                 <td><h3 th:text="${p.name}"></h3></td>
                 <td><h3 th:text="${p.count}"></h3></td>
                 <td><h3 th:text="${p.price}"></h3></td>

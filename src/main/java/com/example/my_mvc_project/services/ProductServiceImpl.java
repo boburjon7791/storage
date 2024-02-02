@@ -68,8 +68,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<ProductGetDto> productsByName(Pageable pageable, String name) {
-        Page<ProductGetDto> products = productRepository.findAllByNameContainingIgnoreCase(name, pageable)
-                .map(productMapper::toDto);
+        Page<ProductGetDto> products;
+        try {
+            products=productRepository.findAllById(Long.parseLong(name),pageable)
+                    .map(productMapper::toDto);
+        }catch (Exception ignore){
+            products = productRepository.findAllByNameContainingIgnoreCase(name, pageable)
+                    .map(productMapper::toDto);
+        }
         if (products.isEmpty()) {
             throw new NotFoundException("Mahsulotlar topilmadi");
         }

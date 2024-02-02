@@ -55,9 +55,6 @@ public class ImageServiceImpl implements ImageService {
         }
         try {
             Path path1 = Path.of(path + "/" + UUID.randomUUID() + "." + extension);
-            Files.copy(file.getInputStream(),
-                    path1,
-                    StandardCopyOption.REPLACE_EXISTING);
             try {
                 BufferedImage read = ImageIO.read(file.getInputStream());
                 int type = read.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : read.getType();
@@ -69,7 +66,7 @@ public class ImageServiceImpl implements ImageService {
             String name = FilenameUtils.getName(path1.toString());
             cachedImages.put(name, LocalDateTime.now().plusMinutes(5));
             return name;
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

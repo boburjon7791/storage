@@ -86,6 +86,7 @@
         <table class="table table-light">
             <thead>
              <tr>
+                 <th><h3>Mahsulot id raqami</h3></th>
                  <th><h3>Mahsulot nomi</h3></th>
                  <th><h3>Mahsulot rasmi</h3></th>
                  <th><h3>Miqdori</h3></th>
@@ -96,6 +97,7 @@
             </thead>
             <tbody>
             <tr th:each="s:${sells}">
+                <td><h3><a th:href="@{'/product/get/'+${s.product.id}}" th:text="${s.product.id}"></a></h3></td>
                 <td><h3><a th:href="@{'/product/get/'+${s.product.id}}" th:text="${s.product.name}"></a></h3></td>
                 <td><h3><a th:href="@{'/product/get/'+${s.product.id}}"><img style="height: 100px" th:src="@{'/image/get/'+${s.product.image}}" th:alt="${s.product.name}"></a></h3></td>
                 <td><h3 th:text="${s.count}"></h3></td>

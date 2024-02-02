@@ -15,7 +15,7 @@ import java.util.Set;
 @ToString
 @Builder
 @Table(name = "users", indexes = {
-        @Index(name = "idx_employee_role", columnList = "role,username,account_locked")
+        @Index(name = "idx_employee_role", columnList = "role,username,account_non_locked")
 }, uniqueConstraints = {
         @UniqueConstraint(name = "uc_user_username", columnNames = {"username"})
 })

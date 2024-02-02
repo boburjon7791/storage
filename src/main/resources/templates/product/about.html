@@ -88,8 +88,9 @@
 <div class="d-flex flex-row">
     <div class="card">
         <div class="card-body">
-            <form action="/product/update" method="post" enctype="application/x-www-form-urlencoded" sec:authorize="hasAnyRole('SUPER_MANAGER','MANAGER')">
             <h1 style="color: #198754">Mahsulot haqida</h1>
+            <h3 style="color: #198754;" th:text="'Mahsulot id raqami :   '+${prod.id}"></h3>
+            <form action="/product/update" method="post" enctype="application/x-www-form-urlencoded" sec:authorize="hasAnyRole('SUPER_MANAGER','MANAGER')">
             <label>
                 <input type="hidden" name="_csrf" th:value="${_csrf.token}" required>
                 <input type="text" id="formGroupExampleInput1" class="form-control" name="name" th:value="${prod.name}" placeholder="Nomini kiriting" required>

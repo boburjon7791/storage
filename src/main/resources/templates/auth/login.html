@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" href="/css/bootstrap.css">
-<!--    <link rel="stylesheet" href="../css/bootstrap.css">-->
+    <link rel="stylesheet" href="../css/bootstrap.css">
 </head>
 <body>
 <style>
@@ -35,5 +35,32 @@
         </div>
     </div>
 </form>
+<!--
+<form method="POST" enctype="application/x-www-form-urlencoded">
+    <div class="container">
+        <div class="row justify-content-center align-items-center vh-100">
+            <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 style="color: #198754">Tizimga kirish</h1>
+                        <br>
+                        <label>
+                            <input type="hidden" id="_csrf" name="_csrf" th:value="${_csrf.token}" required>
+                            <input type="text" id="formGroupExampleInput3" name="uname" class="form-control" placeholder="Loginingizni kiriting" required>
+                            <br>
+                            <input type="password" id="formGroupExampleInput4" name="pswd" class="form-control" placeholder="Parolingizni kiriting" required>
+                            &lt;!&ndash;<br>
+                            <input type="checkbox" name="rem">
+                            <a>Saqlash</a>&ndash;&gt;
+                            <br>
+                            <input type="submit" class="btn btn-success" value="Kirish" required>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>-->
+
 </body>
 </html>

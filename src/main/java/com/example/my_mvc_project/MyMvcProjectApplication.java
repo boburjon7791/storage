@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TimeZone;
 
 @Slf4j
 @AllArgsConstructor
@@ -27,6 +28,7 @@ public class MyMvcProjectApplication {
 	private final ImageService imageService;
 
 	public static void main(String[] args) {
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Tashkent"));
 		SpringApplication.run(MyMvcProjectApplication.class, args);
 	}
 

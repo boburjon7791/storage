@@ -44,7 +44,7 @@ public class ImageServiceImpl implements ImageService {
         return Files.readAllBytes(targetFile);
     }
     @Override
-    public String save(MultipartFile file) {
+    public String save(MultipartFile file,boolean save) {
         if(file==null || file.isEmpty()){
             return "none";
 	    }
@@ -64,7 +64,9 @@ public class ImageServiceImpl implements ImageService {
                 throw new RuntimeException(e);
             }
             String name = FilenameUtils.getName(path1.toString());
-            cachedImages.put(name, LocalDateTime.now().plusMinutes(5));
+            if (save) {
+                ImageService.cachedImages.put(name, LocalDateTime.now().plusMinutes(5));
+            }
             return name;
         } catch (Exception e) {
             throw new RuntimeException(e);

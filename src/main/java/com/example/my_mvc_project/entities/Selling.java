@@ -28,7 +28,7 @@ public class Selling {
     @NotNull(message = "Sotuv miqdori bo'sh bo'lmasligi kerak")
     @Positive(message = "Sotuv miqdori 0 katta bo'lishi kerak")
     @Column(nullable = false)
-    private Long count;
+    private Double count;
 
     @Builder.Default
     @Column(nullable = false,name = "date_time")

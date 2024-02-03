@@ -44,7 +44,7 @@ public class Product {
     @NotNull(message = "Mahsulot miqdori bo'sh bo'lmasligi kerak")
     @PositiveOrZero(message = "Mahsulot miqdori 0 yoki undan katta bo'lishi kerak")
     @Column(nullable = false)
-    private Long count;
+    private Double count;
 
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
     private Set<Selling> sellings;

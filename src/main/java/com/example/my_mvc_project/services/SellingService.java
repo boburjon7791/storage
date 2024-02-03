@@ -17,7 +17,7 @@ public interface SellingService {
    List<SoldPersonDaily> dailyReport(LocalDate date);
    List<SoldPersonMonthly> monthlyReport(int month);
    Basket getBasket();
-   Basket putToBasket(Long productId,Long productCount);
+   Basket putToBasket(Long productId,Double productCount);
    Basket removeProductFromBasket(Long productId);
    void clearBasket();
    Page<SellingDto> startSelling();
@@ -25,7 +25,7 @@ public interface SellingService {
    Page<SellingDto> sellingsByTime(LocalTime startTime, LocalTime endTime, Pageable pageable);
    Page<SellingDto> sellingsByDate(LocalDate date, Pageable pageable);
    Page<SellingDto> sellingsByProduct(Pageable pageable,Long productId);
-   Page<SellingDto> sellingsByCount(Pageable pageable,Long countStart,Long countEnd);
+   Page<SellingDto> sellingsByCount(Pageable pageable,Double countStart,Double countEnd);
 
    Page<SellingDto> sellingsBySoldPrice(Pageable pageable,Double soldPriceStart,Double soldPriceEnd);
 

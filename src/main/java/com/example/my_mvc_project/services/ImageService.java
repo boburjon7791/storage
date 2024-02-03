@@ -9,6 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public interface ImageService {
     Map<String, LocalDateTime> cachedImages =new ConcurrentHashMap<>();
     byte[] get(String name);
-    String save(MultipartFile file);
+    String save(MultipartFile file,boolean save);
     void delete(String img);
 }

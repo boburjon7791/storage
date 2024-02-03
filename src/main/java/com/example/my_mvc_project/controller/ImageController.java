@@ -31,7 +31,7 @@ public class ImageController {
         if (file==null) {
             image="none";
         }else{
-            image = imageService.save(file);
+            image = imageService.save(file,true);
         }
         model.addAttribute("img", image);
         return "product/save2";
@@ -53,7 +53,7 @@ public class ImageController {
         if (file==null || file.isEmpty()) {
             filename="none";
         }else {
-            filename = imageService.save(file);
+            filename = imageService.save(file,false);
         }
         if (productService.updateImage(filename,p_id)>0) {
             ProductGetDto dto = productService.get(p_id);

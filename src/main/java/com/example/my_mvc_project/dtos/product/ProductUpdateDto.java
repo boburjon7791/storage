@@ -16,7 +16,7 @@ public record ProductUpdateDto(
 
         @NotNull(message = "Mahsulot miqdori bo'sh bo'lmasligi kerak")
         @PositiveOrZero(message = "Mahsulot miqdori 0 yoki undan katta bo'lishi kerak")
-        Long count,
+        Double count,
 
         @NotNull(message = "Mahsulot narxi bo'sh bo'lmasligi kerak")
         @Positive(message = "Mahsulot narxi 0 dan katta bo'lishi kerak")

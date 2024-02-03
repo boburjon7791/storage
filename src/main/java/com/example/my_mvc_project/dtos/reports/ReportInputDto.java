@@ -11,7 +11,7 @@ public record ReportInputDto(
 
         @NotNull(message = "Savdo miqdori bo'sh bo'lmasligi kerak")
         @Positive(message = "Savdo miqdori 0 dan katta bo'lishi kerak")
-        Long count,
+        Double count,
 
         @NotNull(message = "Savdo narxi bo'sh bo'lmasligi kerak")
         @PositiveOrZero(message = "Savdo narxi 0 yoki undan katta bo'lishi kerak")

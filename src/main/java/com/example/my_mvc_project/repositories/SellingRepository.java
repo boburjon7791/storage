@@ -25,7 +25,7 @@ public interface SellingRepository extends JpaRepository<Selling, UUID>, JpaSpec
     Page<Selling> findAllByProduct(Long productId, Pageable pageable);
 
     @Query(value = "from Selling s where s.count between ?1 and ?2")
-    Page<Selling> findAllByBetweenCount(Long countStart, Long countEnd, Pageable pageable);
+    Page<Selling> findAllByBetweenCount(Double countStart, Double countEnd, Pageable pageable);
 
     @Query(value = "from Selling s where s.soldPrice between ?1 and ?2")
     Page<Selling> findAllByBetweenSoldPrice(Double soldPriceStart, Double soldPriceEnd, Pageable pageable);

@@ -39,7 +39,7 @@ public class SellingsController {
 
     @PostMapping("/update-basket")
     @PreAuthorize("hasRole('EMPLOYEE')")
-    public String updateBasket(Model model,@RequestParam long productId,@RequestParam long count){
+    public String updateBasket(Model model,@RequestParam long productId,@RequestParam double count){
         Basket basket = sellingService.putToBasket(productId, count);
         model.addAttribute("basket",basket);
         return "selling/basket";
@@ -120,7 +120,7 @@ public class SellingsController {
     }
 
     @PostMapping("/select")
-    public String save(@RequestParam long productId,@RequestParam long count,Model model){
+    public String save(@RequestParam long productId,@RequestParam double count,Model model){
         Basket basket = sellingService.putToBasket(productId, count);
         model.addAttribute("basket",basket);
         Page<ProductGetDto> products=productService.products(PageRequest.of(0,pageSize));

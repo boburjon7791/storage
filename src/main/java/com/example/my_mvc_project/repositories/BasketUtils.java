@@ -28,7 +28,7 @@ public class BasketUtils {
         }
         return baskets.get(employeeId);
     }
-    public Basket putProductToBasket(Long employeeId,Long productId,Long count){
+    public Basket putProductToBasket(Long employeeId,Long productId,Double count){
         synchronized (object){
             if (count<1) {
                 throw new BadParamException("Savatchaga 1 dan kichik miqdorni kiritish mumkin emas");
@@ -40,7 +40,7 @@ public class BasketUtils {
             }else {
                 basket=new Basket();
             }
-            Long productCount = productService.get(productId).getCount();
+            Double productCount = productService.get(productId).getCount();
             if (productCount <count) {
                 throw new NotFoundException("Ushbu mahsulotdan faqatgina %s ta qoldi".formatted(productCount));
             }

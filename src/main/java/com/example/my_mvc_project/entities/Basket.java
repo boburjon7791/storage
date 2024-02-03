@@ -16,7 +16,7 @@ public class Basket {
      * key is product id, value is count
      * */
     @Builder.Default
-    public Map<ProductGetDto,Long> productsAndCounts=new ConcurrentHashMap<>();
+    public Map<ProductGetDto,Double> productsAndCounts=new ConcurrentHashMap<>();
 
     @Builder.Default
     private Double price=0d;
@@ -25,7 +25,7 @@ public class Basket {
 
     private final Object object=new Object();
 
-    public void setProductsAndCounts(Map<ProductGetDto, Long> productsAndCounts) {
+    public void setProductsAndCounts(Map<ProductGetDto, Double> productsAndCounts) {
         synchronized (object){
             this.productsAndCounts = productsAndCounts;
         }

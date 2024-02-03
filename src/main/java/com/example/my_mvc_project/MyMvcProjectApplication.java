@@ -51,10 +51,11 @@ public class MyMvcProjectApplication {
 				ImageService.cachedImages.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Map.Entry<String, LocalDateTime> entry = iterator.next();
+			log.info(entry.getKey()+" "+entry.getValue()+" checking image");
 			if (entry.getValue().isBefore(LocalDateTime.now())) {
 				iterator.remove();
 				imageService.delete(entry.getKey());
-				System.out.println(entry.getKey()+" was deleted");
+				System.out.println(entry.getKey()+" was deleted "+LocalDateTime.now());
 			}
 		}
 	}

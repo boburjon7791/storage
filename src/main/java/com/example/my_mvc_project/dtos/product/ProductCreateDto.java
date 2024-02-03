@@ -16,7 +16,7 @@ public record ProductCreateDto(
 
         @NotNull(message = "Mahsulot miqdori bo'sh bo'lishi mumkin emas")
         @PositiveOrZero(message = "Mahsulot miqdori 0 yoki undan katta bo'lishi kerak")
-        Long count,
+        Double count,
 
         @Nullable
         String image,

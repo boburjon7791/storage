@@ -25,7 +25,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Query(value = "from Product p where p.price between ?1 and ?2")
     Page<Product> findAllByBetweenPrices(Double priceStart, Double priceEnd, Pageable pageable);
     @Query(value = "from Product p where p.count between ?1 and ?2")
-    Page<Product> findAllByBetweenCounts(Long countStart, Long countEnd, Pageable pageable);
+    Page<Product> findAllByBetweenCounts(Double countStart, Double countEnd, Pageable pageable);
 
     @Modifying
     @Transactional
@@ -37,6 +37,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
 
     @Modifying
     @Query(value = "update Product p set p.count=p.count-?1 where p.id=?2")
-    int subtractCountById(Long count, Long id);
+    int subtractCountById(Double count, Long id);
 
 }

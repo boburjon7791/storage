@@ -131,7 +131,7 @@ public class SellingServiceImpl implements SellingService {
     }
 
     @Override
-    public Basket putToBasket(Long productId, Long productCount) {
+    public Basket putToBasket(Long productId, Double productCount) {
         CustomUserDetails customUserDetails=(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return basketMatcher(basketUtils.putProductToBasket
                 (customUserDetails.employee.getId(), productId, productCount));
@@ -168,7 +168,7 @@ public class SellingServiceImpl implements SellingService {
             throw new NotFoundException("Savat bo'sh");
         }
         List<Long> productsIds = basket.productsAndCounts.keySet().stream().map(ProductGetDto::getId).toList();
-        List<Long> counts = basket.productsAndCounts.values().stream().toList();
+        List<Double> counts = basket.productsAndCounts.values().stream().toList();
         for (int i = 0; i < productsIds.size(); i++) {
             ProductGetDto product = productService.get(productsIds.get(i));
             save(new ReportInputDto(product.getId(),counts.get(i),product.getPrice()*counts.get(i)));
@@ -225,7 +225,7 @@ public class SellingServiceImpl implements SellingService {
     }
 
     @Override
-    public Page<SellingDto> sellingsByCount(Pageable pageable, Long countStart, Long countEnd) {
+    public Page<SellingDto> sellingsByCount(Pageable pageable, Double countStart, Double countEnd) {
         return getSellingDtos(sellingRepository.findAllByBetweenCount(countStart, countEnd, pageable));
     }
 

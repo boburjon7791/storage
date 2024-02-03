@@ -33,6 +33,7 @@ public class ProductServiceImpl implements ProductService {
         }
         ProductGetDto getDto = productMapper.toDto(productRepository.save(productMapper.toEntity(dto)));
         ImageService.cachedImages.remove(getDto.getImage());
+        ImageService.cachedImages.forEach((s, time) -> System.out.println(s+" "+time));
         System.out.println("After removing...");
         ImageService.cachedImages.forEach((s, time) -> System.out.println(s+" : "+time));
         return getDto;
@@ -103,7 +104,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductGetDto> productsByCount(Pageable pageable, Long countStart, Long countEnd) {
+    public Page<ProductGetDto> productsByCount(Pageable pageable, Double countStart, Double countEnd) {
         Page<ProductGetDto> products = productRepository.findAllByBetweenCounts(countStart, countEnd, pageable)
                 .map(productMapper::toDto);
         if (products.isEmpty()) {

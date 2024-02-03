@@ -14,7 +14,7 @@ public interface ProductService {
     Page<ProductGetDto> productsByName(Pageable pageable,String name);
     Page<ProductGetDto> productsByAbout(Pageable pageable,String about);
     Page<ProductGetDto> productsByPrice(Pageable pageable,Double priceStart,Double priceEnd);
-    Page<ProductGetDto> productsByCount(Pageable pageable,Long countStart,Long countEnd);
+    Page<ProductGetDto> productsByCount(Pageable pageable,Double countStart,Double countEnd);
 
     int updateImage(String saved, long productId);
 }

@@ -14,7 +14,7 @@ import java.util.UUID;
 public class SellingDto {
        private UUID id;
        private ProductGetDto product;
-       private Long count;
+       private Double count;
        private Double soldPrice;
        private String soldPrice2;
        private LocalDateTime dateTime;

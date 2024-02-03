@@ -14,7 +14,7 @@ public class ProductGetDto{
 
     private  Double price;
 
-    private  Long count;
+    private  Double count;
 
     private  String image;
 

@@ -14,8 +14,8 @@ import java.util.UUID;
 
 @Repository
 public interface SellingRepository extends JpaRepository<Selling, UUID>, JpaSpecificationExecutor<Selling> {
-    @Query(value = "from Selling s where extract(date from s.dateTime)=?1")
-    Page<Selling> findAllByDate(Pageable pageable, LocalDate date);
+    @Query(value = "from Selling s where extract(date from s.dateTime)= (?1)")
+    Page<Selling> findAllByDate(LocalDate date, Pageable pageable);
 
     @Query(nativeQuery = true,value = "select * from selling s where extract(localtime from s.date_time) between ?1 and?2")
     Page<Selling> findAllByBetweenTime(LocalTime startTime, LocalTime endTime, Pageable pageable);

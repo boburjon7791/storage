@@ -27,7 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @EnableMethodSecurity(
         securedEnabled = true,
-        jsr250Enabled = true
+        jsr250Enabled = true,
+        prePostEnabled = true
 )
 @Slf4j
 @Configuration
@@ -51,7 +52,8 @@ public class SecurityConfiguration {
                            "/js/**",
                            "/error_pages/**",
                            "/favicon.ico",
-                           "/source/**"
+                           "/source/**",
+                           "/manager/test"
                          )
                         .permitAll()
                         .anyRequest().authenticated())
@@ -75,8 +77,9 @@ public class SecurityConfiguration {
                 .logout(configurer2 -> {
                     configurer2.permitAll();
                     configurer2.logoutUrl("/logout");
-                    configurer2.logoutSuccessHandler((request, response, authentication) ->
-                            response.sendRedirect("/auth/login"));
+                    configurer2.logoutSuccessHandler((request, response, authentication) ->{
+                            response.sendRedirect("/auth/login");
+                        });
                     configurer2.logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
                 })
                 .addFilterBefore(oncePerRequestFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -128,7 +131,7 @@ public class SecurityConfiguration {
             }
             System.out.println("request.getSession().getId() = " + request.getSession().getId());
             addIpAddressToList(request.getSession().getId());
-            response.sendRedirect("/");
+            response.sendRedirect("/auth/login");
         };
     }
 }

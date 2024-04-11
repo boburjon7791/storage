@@ -174,8 +174,8 @@ public class SellingServiceImpl implements SellingService {
             save(new ReportInputDto(product.getId(),counts.get(i),product.getPrice()*counts.get(i)));
         }
         return getSellingDtos(sellingRepository.findAllByDate
-                (PageRequest.of(0,pagesSize,
-                        Sort.by(Sort.Direction.DESC,"dateTime")), LocalDate.now()));
+                (LocalDate.now(),PageRequest.of(0,pagesSize,
+                Sort.by(Sort.Direction.DESC,"dateTime"))));
     }
 
     @Override
@@ -217,7 +217,7 @@ public class SellingServiceImpl implements SellingService {
 
     @Override
     public Page<SellingDto> sellingsByDate(LocalDate date, Pageable pageable) {
-        return getSellingDtos(sellingRepository.findAllByDate(pageable, date));
+        return getSellingDtos(sellingRepository.findAllByDate(date, pageable));
     }
     @Override
     public Page<SellingDto> sellingsByProduct(Pageable pageable, Long productId) {

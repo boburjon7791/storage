@@ -99,7 +99,7 @@
                 <input type="number" class="form-control" id="formGroupExampleInput2" name="price" th:value="${prod.price}"  placeholder="Narxini kiriting" required>
                 <br>
                 <input type="hidden" name="image" th:value="${prod.image}">
-                <input type="number" id="formGroupExampleInput3" class="form-control" name="count" step="0.001" th:value="${prod.count}" placeholder="Miqdorini kiriting" required>
+                <input type="number" id="formGroupExampleInput3" class="form-control" name="count" th:value="${prod.count}" placeholder="Miqdorini kiriting" required>
                 <br>
                 <a class="btn btn-success" th:href="@{'/image/update/'+${prod.id}}">Mahsulot rasmini o'zgartirish</a>
                 <br>
